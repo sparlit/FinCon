@@ -2,12 +2,12 @@
 #include <QStatusBar>
 #include <QLabel>
 
-namespace ui {
+namespace FinConUI {
 
-class StatusBar : public QStatusBar {
+class FinConStatusBar : public QStatusBar {
     Q_OBJECT
 public:
-    StatusBar(QWidget* parent = nullptr);
+    FinConStatusBar(QWidget* parent = nullptr);
 
 private:
     QLabel* symbolLabel_;

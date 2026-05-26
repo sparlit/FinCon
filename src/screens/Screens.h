@@ -2,25 +2,24 @@
 #include "IScreen.h"
 #include <QTableWidget>
 
-namespace screens {
+namespace FinConScreens {
 
-class DashboardScreen : public IScreen {
+class FinConDashboardScreen : public IFinConScreen {
     Q_OBJECT
 public:
-    DashboardScreen(QWidget* parent = nullptr);
+    FinConDashboardScreen(QWidget* parent = nullptr);
 };
 
-class MarketsScreen : public IScreen {
+class FinConMarketsScreen : public IFinConScreen {
     Q_OBJECT
 public:
-    MarketsScreen(QWidget* parent = nullptr);
+    FinConMarketsScreen(QWidget* parent = nullptr);
 };
 
-class AIChatScreen : public IScreen {
+class FinConAIChatScreen : public IFinConScreen {
     Q_OBJECT
 public:
-    AIChatScreen(QWidget* parent = nullptr);
+    FinConAIChatScreen(QWidget* parent = nullptr);
 };
 
-// ... more screens
 }

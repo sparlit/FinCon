@@ -2,9 +2,9 @@
 #include <QString>
 #include <QWidget>
 
-namespace screens {
+namespace FinConScreens {
 
-class ScreenFactory {
+class FinConScreenFactory {
 public:
     static QWidget* createScreen(const QString& name, QWidget* parent = nullptr);
 };

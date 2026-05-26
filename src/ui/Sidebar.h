@@ -2,12 +2,12 @@
 #include <QDockWidget>
 #include <QListWidget>
 
-namespace ui {
+namespace FinConUI {
 
-class Sidebar : public QDockWidget {
+class FinConSidebar : public QDockWidget {
     Q_OBJECT
 public:
-    Sidebar(QWidget* parent = nullptr);
+    FinConSidebar(QWidget* parent = nullptr);
 
 signals:
     void screenRequested(const QString& name);

@@ -4,34 +4,34 @@
 #include <QShortcut>
 #include <QKeySequence>
 
-namespace ui {
+namespace FinConUI {
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
+FinConMainWindow::FinConMainWindow(QWidget* parent) : QMainWindow(parent) {
     setupUi();
 }
 
-void MainWindow::setupUi() {
+void FinConMainWindow::setupUi() {
     dockManager_ = new ads::CDockManager(this);
 
-    navBar_ = new NavigationBar(this);
+    navBar_ = new FinConNavigationBar(this);
     setMenuWidget(navBar_);
 
-    sidebar_ = new Sidebar(this);
+    sidebar_ = new FinConSidebar(this);
     addDockWidget(Qt::LeftDockWidgetArea, sidebar_);
 
-    statusBar_ = new StatusBar(this);
+    statusBar_ = new FinConStatusBar(this);
     setStatusBar(statusBar_);
 
-    commandBar_ = new CommandBar(this);
+    commandBar_ = new FinConCommandBar(this);
     commandBar_->hide();
 
-    connect(sidebar_, &Sidebar::screenRequested, this, &MainWindow::onScreenRequested);
+    connect(sidebar_, &FinConSidebar::screenRequested, this, &FinConMainWindow::onScreenRequested);
 
     new QShortcut(QKeySequence("Ctrl+K"), this, SLOT(showCommandBar()));
 }
 
-void MainWindow::onScreenRequested(const QString& screenName) {
-    QWidget* screen = screens::ScreenFactory::createScreen(screenName, this);
+void FinConMainWindow::onScreenRequested(const QString& screenName) {
+    QWidget* screen = FinConScreens::FinConScreenFactory::createScreen(screenName, this);
     if (screen) {
         ads::CDockWidget* dockWidget = new ads::CDockWidget(screenName);
         dockWidget->setWidget(screen);
@@ -39,7 +39,7 @@ void MainWindow::onScreenRequested(const QString& screenName) {
     }
 }
 
-void MainWindow::showCommandBar() {
+void FinConMainWindow::showCommandBar() {
     commandBar_->show();
     commandBar_->setFocus();
 }

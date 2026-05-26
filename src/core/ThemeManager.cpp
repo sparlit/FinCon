@@ -1,13 +1,13 @@
 #include "ThemeManager.h"
 
-namespace core {
+namespace FinConCore {
 
-ThemeTokens ThemeManager::tokens() {
-    return ThemeTokens();
+FinConThemeTokens FinConThemeManager::tokens() {
+    return FinConThemeTokens();
 }
 
-QString ThemeManager::generateStyleSheet() {
-    ThemeTokens t = tokens();
+QString FinConThemeManager::generateStyleSheet() {
+    FinConThemeTokens t = tokens();
     QString qss = R"(
         QWidget {
             background-color: %bg_base%;

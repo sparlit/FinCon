@@ -1,6 +1,6 @@
 #pragma once
-namespace core {
-class CrashHandler {
+namespace FinConCore {
+class FinConCrashHandler {
 public:
     static void install();
 };

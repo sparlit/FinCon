@@ -5,18 +5,18 @@
 #include <QStandardPaths>
 #include <QDir>
 
-namespace core {
+namespace FinConCore {
 
-Persistence::Persistence() {
+FinConPersistence::FinConPersistence() {
     db_ = QSqlDatabase::addDatabase("QSQLITE");
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir().mkpath(path);
     db_.setDatabaseName(path + "/terminal.db");
 }
 
-bool Persistence::init() {
+bool FinConPersistence::init() {
     if (!db_.open()) {
-        LOG_ERROR("DB", "Failed to open database: " + db_.lastError().text().toStdString());
+        FINCON_LOG_ERROR("DB", "Failed to open database: " + db_.lastError().text().toStdString());
         return false;
     }
 
@@ -27,9 +27,8 @@ bool Persistence::init() {
     return true;
 }
 
-void Persistence::runMigrations() {
+void FinConPersistence::runMigrations() {
     QSqlQuery query;
-    // Simple migration table
     query.exec("CREATE TABLE IF NOT EXISTS migrations (id INTEGER PRIMARY KEY, version INTEGER)");
 
     query.exec("SELECT MAX(version) FROM migrations");
@@ -39,11 +38,10 @@ void Persistence::runMigrations() {
     }
 
     if (currentVersion < 1) {
-        LOG_INFO("DB", "Running migration 1");
+        FINCON_LOG_INFO("DB", "Running migration 1");
         query.exec("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, session_token TEXT)");
         query.exec("INSERT INTO migrations (version) VALUES (1)");
     }
-    // ... add more migrations as needed
 }
 
 }

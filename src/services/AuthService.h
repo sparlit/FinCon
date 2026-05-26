@@ -4,22 +4,22 @@
 #include <functional>
 #include "core/Result.h"
 
-namespace services {
+namespace FinConServices {
 
-class AuthService : public QObject {
+class FinConAuthService : public QObject {
     Q_OBJECT
 public:
-    static AuthService& instance() {
-        static AuthService inst;
+    static FinConAuthService& instance() {
+        static FinConAuthService inst;
         return inst;
     }
 
-    void login(const QString& email, const QString& password, std::function<void(const core::Result<bool>&)> callback);
+    void login(const QString& email, const QString& password, std::function<void(const FinConCore::FinConResult<bool>&)> callback);
     bool isAuthenticated() const { return authenticated_; }
     QString username() const { return "User"; }
 
 private:
-    AuthService() : authenticated_(false) {}
+    FinConAuthService() : authenticated_(false) {}
     bool authenticated_;
 };
 

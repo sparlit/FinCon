@@ -6,12 +6,12 @@
 #include "StatusBar.h"
 #include "CommandBar.h"
 
-namespace ui {
+namespace FinConUI {
 
-class MainWindow : public QMainWindow {
+class FinConMainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    MainWindow(QWidget* parent = nullptr);
+    FinConMainWindow(QWidget* parent = nullptr);
 
 private slots:
     void onScreenRequested(const QString& screenName);
@@ -20,10 +20,10 @@ private slots:
 private:
     void setupUi();
     ads::CDockManager* dockManager_;
-    NavigationBar* navBar_;
-    Sidebar* sidebar_;
-    StatusBar* statusBar_;
-    CommandBar* commandBar_;
+    FinConNavigationBar* navBar_;
+    FinConSidebar* sidebar_;
+    FinConStatusBar* statusBar_;
+    FinConCommandBar* commandBar_;
 };
 
 }

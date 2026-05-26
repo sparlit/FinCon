@@ -3,23 +3,18 @@
 #include <csignal>
 #include <iostream>
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
+namespace FinConCore {
 
-namespace core {
-
-void signalHandler(int signal) {
-    LOG_ERROR("CRASH", "Caught signal: " + std::to_string(signal));
-    // In a real app, generate stack trace/minidump here
+void FinConSignalHandler(int signal) {
+    FINCON_LOG_ERROR("CRASH", "Caught signal: " + std::to_string(signal));
     exit(signal);
 }
 
-void CrashHandler::install() {
-    std::signal(SIGSEGV, signalHandler);
-    std::signal(SIGFPE, signalHandler);
-    std::signal(SIGILL, signalHandler);
-    std::signal(SIGABRT, signalHandler);
+void FinConCrashHandler::install() {
+    std::signal(SIGSEGV, FinConSignalHandler);
+    std::signal(SIGFPE, FinConSignalHandler);
+    std::signal(SIGILL, FinConSignalHandler);
+    std::signal(SIGABRT, FinConSignalHandler);
 }
 
 }

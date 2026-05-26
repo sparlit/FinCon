@@ -2,15 +2,15 @@
 #include <variant>
 #include <string>
 
-namespace core {
+namespace FinConCore {
 
 template<typename T>
-class Result {
+class FinConResult {
 public:
-    Result(const T& val) : data_(val) {}
-    Result(T&& val) : data_(std::move(val)) {}
-    Result(const std::string& err) : data_(err) {}
-    Result(std::string&& err) : data_(std::move(err)) {}
+    FinConResult(const T& val) : data_(val) {}
+    FinConResult(T&& val) : data_(std::move(val)) {}
+    FinConResult(const std::string& err) : data_(err) {}
+    FinConResult(std::string&& err) : data_(std::move(err)) {}
 
     bool has_value() const { return std::holds_alternative<T>(data_); }
     const T& value() const { return std::get<T>(data_); }
@@ -23,9 +23,8 @@ private:
     std::variant<T, std::string> data_;
 };
 
-// Helper for creating errors
-inline auto Unexpected(std::string err) {
+inline auto FinConUnexpected(std::string err) {
     return err;
 }
 
-} // namespace core
+}

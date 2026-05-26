@@ -23,6 +23,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     PrintSupport
     Multimedia
     TextToSpeech
+    Test
 )
 
 include(FetchContent)
@@ -83,6 +84,19 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
+# Tests
+add_executable(FinConTests
+    src/tests/FinConSystemTests.cpp
+    src/core/DataHub.cpp
+    src/core/Logger.cpp
+    src/core/Persistence.cpp
+)
+target_link_libraries(FinConTests PRIVATE
+    Qt6::Test
+    Qt6::Sql
+)
+target_include_directories(FinConTests PRIVATE src)
+
 if(APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE "-framework Foundation" "-framework Security")
 elseif(UNIX AND NOT APPLE)
@@ -91,7 +105,3 @@ elseif(UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBSECRET_LIBRARIES})
     target_include_directories(${PROJECT_NAME} PRIVATE ${LIBSECRET_INCLUDE_DIRS})
 endif()
-
-# target_compile_definitions(${PROJECT_NAME} PRIVATE
-#     QT_NO_CAST_FROM_ASCII
-# )

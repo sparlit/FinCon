@@ -13,9 +13,9 @@
 #include <Security/Security.h>
 #endif
 
-namespace core {
+namespace FinConCore {
 
-Result<bool> CredentialManager::storePassword(const QString& service, const QString& account, const QString& password) {
+FinConResult<bool> FinConCredentialManager::storePassword(const QString& service, const QString& account, const QString& password) {
 #ifdef __linux__
     GError* error = nullptr;
     secret_password_store_sync(
@@ -31,9 +31,9 @@ Result<bool> CredentialManager::storePassword(const QString& service, const QStr
     if (error) {
         std::string msg = error->message;
         g_error_free(error);
-        return Result<bool>(msg);
+        return FinConResult<bool>(msg);
     }
-    return Result<bool>(true);
+    return FinConResult<bool>(true);
 #elif defined(_WIN32)
     DATA_BLOB dataIn;
     DATA_BLOB dataOut;
@@ -42,11 +42,10 @@ Result<bool> CredentialManager::storePassword(const QString& service, const QStr
     dataIn.cbData = pwd.size();
 
     if (CryptProtectData(&dataIn, L"Terminal Password", NULL, NULL, NULL, 0, &dataOut)) {
-        // In a real app, save dataOut.pbData to a file/registry
         LocalFree(dataOut.pbData);
-        return Result<bool>(true);
+        return FinConResult<bool>(true);
     }
-    return Result<bool>(std::string("Win32 CryptProtectData failed"));
+    return FinConResult<bool>(std::string("Win32 CryptProtectData failed"));
 #elif defined(__APPLE__)
     OSStatus status = SecKeychainAddGenericPassword(
         NULL,
@@ -55,14 +54,14 @@ Result<bool> CredentialManager::storePassword(const QString& service, const QStr
         password.length(), password.toUtf8().constData(),
         NULL
     );
-    if (status != errSecSuccess) return Result<bool>(std::string("macOS Keychain error"));
-    return Result<bool>(true);
+    if (status != errSecSuccess) return FinConResult<bool>(std::string("macOS Keychain error"));
+    return FinConResult<bool>(true);
 #else
-    return Result<bool>(true);
+    return FinConResult<bool>(true);
 #endif
 }
 
-Result<QString> CredentialManager::getPassword(const QString& service, const QString& account) {
+FinConResult<QString> FinConCredentialManager::getPassword(const QString& service, const QString& account) {
 #ifdef __linux__
     GError* error = nullptr;
     char* password = secret_password_lookup_sync(
@@ -75,14 +74,14 @@ Result<QString> CredentialManager::getPassword(const QString& service, const QSt
     if (error) {
         std::string msg = error->message;
         g_error_free(error);
-        return Result<QString>(msg);
+        return FinConResult<QString>(msg);
     }
-    if (!password) return Result<QString>(QString(""));
+    if (!password) return FinConResult<QString>(QString(""));
     QString res = QString::fromUtf8(password);
     secret_password_free(password);
-    return res;
+    return FinConResult<QString>(res);
 #else
-    return QString("");
+    return FinConResult<QString>(QString(""));
 #endif
 }
 

@@ -3,12 +3,12 @@
 #include <QTableWidget>
 #include <QComboBox>
 
-namespace screens {
+namespace FinConScreens {
 
-class QuantLibSuiteScreen : public IScreen {
+class FinConQuantLibSuiteScreen : public IFinConScreen {
     Q_OBJECT
 public:
-    QuantLibSuiteScreen(QWidget* parent = nullptr);
+    FinConQuantLibSuiteScreen(QWidget* parent = nullptr);
 
 private slots:
     void onToolChanged(int index);
