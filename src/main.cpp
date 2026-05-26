@@ -1,31 +1,29 @@
 #include <QApplication>
-#include <QDir>
-#include "ui/MainWindow.h"
-#include "core/ThemeManager.h"
-#include "core/CrashHandler.h"
-#include "core/Persistence.h"
-#include "core/Logger.h"
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
+#include "ui/MainWindow.h"
+#include "core/ThemeManager.h"
+#include "core/CrashHandler.h"
+#include "core/Persistence.h"
+#include "core/Logger.h"
 #include "services/AuthService.h"
 
 int main(int argc, char *argv[]) {
-    core::CrashHandler::install();
+    FinConCore::FinConCrashHandler::install();
 
     QApplication app(argc, argv);
     app.setApplicationName("FinCon Terminal");
     app.setOrganizationName("FinCon");
 
-    if (!core::Persistence::instance().init()) {
+    if (!FinConCore::FinConPersistence::instance().init()) {
         return 1;
     }
 
-    app.setStyleSheet(core::ThemeManager::generateStyleSheet());
+    app.setStyleSheet(FinConCore::FinConThemeManager::generateStyleSheet());
 
-    // Login Dialog
     QDialog loginDlg;
     loginDlg.setWindowTitle("FinCon Terminal - Login");
     auto layout = new QVBoxLayout(&loginDlg);
@@ -41,9 +39,8 @@ int main(int argc, char *argv[]) {
     layout->addWidget(loginBtn);
 
     QObject::connect(loginBtn, &QPushButton::clicked, [&]() {
-        services::AuthService::instance().login(email->text(), password->text(), [&](auto res) {
+        FinConServices::FinConAuthService::instance().login(email->text(), password->text(), [&](auto res) {
             if (res) loginDlg.accept();
-            else LOG_ERROR("Auth", "Login failed");
         });
     });
 
@@ -51,7 +48,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    ui::MainWindow w;
+    FinConUI::FinConMainWindow w;
     w.showMaximized();
     return app.exec();
 }

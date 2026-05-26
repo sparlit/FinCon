@@ -3,12 +3,12 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 
-namespace screens {
+namespace FinConScreens {
 
-class NodeEditorScreen : public IScreen {
+class FinConNodeEditorScreen : public IFinConScreen {
     Q_OBJECT
 public:
-    NodeEditorScreen(QWidget* parent = nullptr);
+    FinConNodeEditorScreen(QWidget* parent = nullptr);
 
 private:
     QGraphicsView* view_;

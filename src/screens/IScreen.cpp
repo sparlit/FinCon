@@ -1,5 +1,5 @@
 #include "IScreen.h"
 
-namespace screens {
-IScreen::~IScreen() {}
+namespace FinConScreens {
+IFinConScreen::~IFinConScreen() {}
 }

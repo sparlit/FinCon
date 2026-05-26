@@ -2,9 +2,9 @@
 #include <QVBoxLayout>
 #include <QKeyEvent>
 
-namespace ui {
+namespace FinConUI {
 
-CommandBar::CommandBar(QWidget* parent) : QWidget(parent, Qt::FramelessWindowHint | Qt::Popup) {
+FinConCommandBar::FinConCommandBar(QWidget* parent) : QWidget(parent, Qt::FramelessWindowHint | Qt::Popup) {
     auto layout = new QVBoxLayout(this);
     input_ = new QLineEdit(this);
     input_->setPlaceholderText("Search screens or actions (Ctrl+K)...");
@@ -19,7 +19,7 @@ CommandBar::CommandBar(QWidget* parent) : QWidget(parent, Qt::FramelessWindowHin
     input_->installEventFilter(this);
 }
 
-bool CommandBar::eventFilter(QObject* obj, QEvent* event) {
+bool FinConCommandBar::eventFilter(QObject* obj, QEvent* event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key() == Qt::Key_Escape) {

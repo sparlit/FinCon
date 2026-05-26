@@ -2,12 +2,12 @@
 #include <QString>
 #include "Result.h"
 
-namespace core {
+namespace FinConCore {
 
-class CredentialManager {
+class FinConCredentialManager {
 public:
-    static Result<bool> storePassword(const QString& service, const QString& account, const QString& password);
-    static Result<QString> getPassword(const QString& service, const QString& account);
+    static FinConResult<bool> storePassword(const QString& service, const QString& account, const QString& password);
+    static FinConResult<QString> getPassword(const QString& service, const QString& account);
 };
 
 }

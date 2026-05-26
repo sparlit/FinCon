@@ -2,14 +2,13 @@
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QPushButton>
 
-namespace ui {
+namespace FinConUI {
 
-class NavigationBar : public QWidget {
+class FinConNavigationBar : public QWidget {
     Q_OBJECT
 public:
-    NavigationBar(QWidget* parent = nullptr);
+    FinConNavigationBar(QWidget* parent = nullptr);
 
 private slots:
     void updateTime();

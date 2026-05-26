@@ -91,7 +91,3 @@ elseif(UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBSECRET_LIBRARIES})
     target_include_directories(${PROJECT_NAME} PRIVATE ${LIBSECRET_INCLUDE_DIRS})
 endif()
-
-# target_compile_definitions(${PROJECT_NAME} PRIVATE
-#     QT_NO_CAST_FROM_ASCII
-# )

@@ -5,19 +5,18 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-namespace screens {
+namespace FinConScreens {
 
-QWidget* ScreenFactory::createScreen(const QString& name, QWidget* parent) {
-    if (name == "Dashboard") return new DashboardScreen(parent);
-    if (name == "Markets") return new MarketsScreen(parent);
-    if (name == "AI Chat") return new AIChatScreen(parent);
-    if (name == "Node Editor") return new NodeEditorScreen(parent);
-    if (name == "QuantLib Suite") return new QuantLibSuiteScreen(parent);
+QWidget* FinConScreenFactory::createScreen(const QString& name, QWidget* parent) {
+    if (name == "Dashboard") return new FinConDashboardScreen(parent);
+    if (name == "Markets") return new FinConMarketsScreen(parent);
+    if (name == "AI Chat") return new FinConAIChatScreen(parent);
+    if (name == "Node Editor") return new FinConNodeEditorScreen(parent);
+    if (name == "QuantLib Suite") return new FinConQuantLibSuiteScreen(parent);
 
-    // Generic stub for others
-    auto screen = new IScreen(parent);
+    auto screen = new IFinConScreen(parent);
     auto layout = new QVBoxLayout(screen);
-    layout->addWidget(new QLabel("Screen: " + name, screen));
+    layout->addWidget(new QLabel("Screen Stub: " + name, screen));
     return screen;
 }
 

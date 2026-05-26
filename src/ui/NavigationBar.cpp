@@ -1,11 +1,12 @@
 #include "NavigationBar.h"
 #include <QDateTime>
 #include <QTimer>
+#include <QPushButton>
 #include "services/AuthService.h"
 
-namespace ui {
+namespace FinConUI {
 
-NavigationBar::NavigationBar(QWidget* parent) : QWidget(parent) {
+FinConNavigationBar::FinConNavigationBar(QWidget* parent) : QWidget(parent) {
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(10, 5, 10, 5);
 
@@ -18,19 +19,19 @@ NavigationBar::NavigationBar(QWidget* parent) : QWidget(parent) {
     clockLabel_ = new QLabel(this);
     layout->addWidget(clockLabel_);
 
-    userLabel_ = new QLabel(services::AuthService::instance().username(), this);
+    userLabel_ = new QLabel(FinConServices::FinConAuthService::instance().username(), this);
     layout->addWidget(userLabel_);
 
     QPushButton* logout = new QPushButton("Logout", this);
     layout->addWidget(logout);
 
     QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &NavigationBar::updateTime);
+    connect(timer, &QTimer::timeout, this, &FinConNavigationBar::updateTime);
     timer->start(1000);
     updateTime();
 }
 
-void NavigationBar::updateTime() {
+void FinConNavigationBar::updateTime() {
     clockLabel_->setText(QDateTime::currentDateTime().toString("HH:mm:ss"));
 }
 

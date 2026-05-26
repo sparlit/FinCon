@@ -4,20 +4,20 @@
 #include <QQueue>
 #include <functional>
 
-namespace services {
+namespace FinConServices {
 
-struct PythonJob {
+struct FinConPythonJob {
     QString script;
     QStringList args;
     std::function<void(QString)> onOutput;
     std::function<void(int)> onFinished;
 };
 
-class PythonRunner : public QObject {
+class FinConPythonRunner : public QObject {
     Q_OBJECT
 public:
-    static PythonRunner& instance() {
-        static PythonRunner inst;
+    static FinConPythonRunner& instance() {
+        static FinConPythonRunner inst;
         return inst;
     }
 
@@ -27,12 +27,10 @@ public:
 
 private slots:
     void processQueue();
-    void handleReadyReadStandardOutput();
-    void handleFinished(int exitCode);
 
 private:
-    PythonRunner();
-    QQueue<PythonJob> queue_;
+    FinConPythonRunner();
+    QQueue<FinConPythonJob> queue_;
     QProcess* currentProcesses_[3];
     int activeProcesses_ = 0;
 };

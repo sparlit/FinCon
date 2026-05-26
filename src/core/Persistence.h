@@ -1,14 +1,13 @@
 #pragma once
 #include <QSqlDatabase>
 #include <QString>
-#include <QVariantMap>
 
-namespace core {
+namespace FinConCore {
 
-class Persistence {
+class FinConPersistence {
 public:
-    static Persistence& instance() {
-        static Persistence inst;
+    static FinConPersistence& instance() {
+        static FinConPersistence inst;
         return inst;
     }
 
@@ -18,7 +17,7 @@ public:
     QSqlDatabase db() { return db_; }
 
 private:
-    Persistence();
+    FinConPersistence();
     QSqlDatabase db_;
 };
 

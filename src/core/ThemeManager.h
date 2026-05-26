@@ -1,11 +1,9 @@
 #pragma once
 #include <QString>
-#include <QColor>
-#include <map>
 
-namespace core {
+namespace FinConCore {
 
-struct ThemeTokens {
+struct FinConThemeTokens {
     QString bg_base = "#080808";
     QString bg_surface = "#1a1a1a";
     QString bg_raised = "#2a2a2a";
@@ -20,10 +18,10 @@ struct ThemeTokens {
     int font_size_caption = 12;
 };
 
-class ThemeManager {
+class FinConThemeManager {
 public:
     static QString generateStyleSheet();
-    static ThemeTokens tokens();
+    static FinConThemeTokens tokens();
 };
 
 }

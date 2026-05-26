@@ -1,25 +1,25 @@
 #include "PythonRunner.h"
 #include "core/Logger.h"
 
-namespace services {
+namespace FinConServices {
 
-PythonRunner::PythonRunner() {
+FinConPythonRunner::FinConPythonRunner() {
     for (int i = 0; i < 3; ++i) currentProcesses_[i] = nullptr;
 }
 
-void PythonRunner::runScript(const QString& script, const QStringList& args,
+void FinConPythonRunner::runScript(const QString& script, const QStringList& args,
                              std::function<void(QString)> onOutput,
                              std::function<void(int)> onFinished) {
     queue_.enqueue({script, args, onOutput, onFinished});
     processQueue();
 }
 
-void PythonRunner::processQueue() {
+void FinConPythonRunner::processQueue() {
     if (queue_.isEmpty() || activeProcesses_ >= 3) return;
 
     for (int i = 0; i < 3; ++i) {
         if (currentProcesses_[i] == nullptr) {
-            PythonJob job = queue_.dequeue();
+            FinConPythonJob job = queue_.dequeue();
             QProcess* proc = new QProcess(this);
             currentProcesses_[i] = proc;
             activeProcesses_++;
@@ -42,8 +42,5 @@ void PythonRunner::processQueue() {
         }
     }
 }
-
-void PythonRunner::handleReadyReadStandardOutput() {}
-void PythonRunner::handleFinished(int) {}
 
 }

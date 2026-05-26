@@ -3,12 +3,12 @@
 #include <QLineEdit>
 #include <QListWidget>
 
-namespace ui {
+namespace FinConUI {
 
-class CommandBar : public QWidget {
+class FinConCommandBar : public QWidget {
     Q_OBJECT
 public:
-    CommandBar(QWidget* parent = nullptr);
+    FinConCommandBar(QWidget* parent = nullptr);
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
