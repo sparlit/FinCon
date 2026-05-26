@@ -9,6 +9,7 @@
 #include "core/CrashHandler.h"
 #include "core/Persistence.h"
 #include "core/Logger.h"
+#include "core/MockQuoteProducer.h"
 #include "services/AuthService.h"
 
 int main(int argc, char *argv[]) {
@@ -21,6 +22,9 @@ int main(int argc, char *argv[]) {
     if (!FinConCore::FinConPersistence::instance().init()) {
         return 1;
     }
+
+    FinConCore::FinConMockQuoteProducer mockProducer;
+    FinConCore::FinConDataHub::instance().registerProvider("quote/*", &mockProducer);
 
     app.setStyleSheet(FinConCore::FinConThemeManager::generateStyleSheet());
 
@@ -44,7 +48,9 @@ int main(int argc, char *argv[]) {
         });
     });
 
-    if (loginDlg.exec() != QDialog::Accepted) {
+    if (qEnvironmentVariableIsSet("FINCON_SKIP_LOGIN")) {
+        // Skip login for headless testing
+    } else if (loginDlg.exec() != QDialog::Accepted) {
         return 0;
     }
 

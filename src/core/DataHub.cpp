@@ -32,7 +32,12 @@ void FinConDataHub::subscribe(const QString& topic, QObject* receiver, const std
     }
 
     for (auto it = providers_.begin(); it != providers_.end(); ++it) {
-        if (topic.startsWith(it.key().left(it.key().indexOf('*')))) {
+        QString pattern = it.key();
+        if (pattern.endsWith('*')) {
+            if (topic.startsWith(pattern.left(pattern.length() - 1))) {
+                it.value()->refresh(topic);
+            }
+        } else if (pattern == topic) {
             it.value()->refresh(topic);
         }
     }

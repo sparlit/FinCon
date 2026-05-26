@@ -7,6 +7,9 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <wincrypt.h>
+#include <QFile>
+#include <QStandardPaths>
+#include <QDir>
 #endif
 
 #ifdef __APPLE__
@@ -42,8 +45,16 @@ FinConResult<bool> FinConCredentialManager::storePassword(const QString& service
     dataIn.cbData = pwd.size();
 
     if (CryptProtectData(&dataIn, L"Terminal Password", NULL, NULL, NULL, 0, &dataOut)) {
+        QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/secrets/";
+        QDir().mkpath(path);
+        QFile file(path + service + "_" + account + ".bin");
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write((const char*)dataOut.pbData, dataOut.cbData);
+            file.close();
+            LocalFree(dataOut.pbData);
+            return FinConResult<bool>(true);
+        }
         LocalFree(dataOut.pbData);
-        return FinConResult<bool>(true);
     }
     return FinConResult<bool>(std::string("Win32 CryptProtectData failed"));
 #elif defined(__APPLE__)
