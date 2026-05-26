@@ -22,10 +22,19 @@ void FinConMainWindow::setupUi() {
     statusBar_ = new FinConStatusBar(this);
     setStatusBar(statusBar_);
 
+    workspaceToolBar_ = new QToolBar("Workspace", this);
+    workspaceToolBar_->addAction("Pin AAPL");
+    workspaceToolBar_->addAction("Pin TSLA");
+    workspaceToolBar_->addSeparator();
+    workspaceToolBar_->addAction("Default Layout");
+    workspaceToolBar_->addAction("Compact Layout");
+    addToolBar(Qt::TopToolBarArea, workspaceToolBar_);
+
     commandBar_ = new FinConCommandBar(this);
     commandBar_->hide();
 
     connect(sidebar_, &FinConSidebar::screenRequested, this, &FinConMainWindow::onScreenRequested);
+    connect(commandBar_, &FinConCommandBar::actionTriggered, this, &FinConMainWindow::onScreenRequested);
 
     new QShortcut(QKeySequence("Ctrl+K"), this, SLOT(showCommandBar()));
 }

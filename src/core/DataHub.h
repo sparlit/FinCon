@@ -39,7 +39,7 @@ private slots:
 
 private:
     FinConDataHub();
-    std::mutex mutex_;
+    std::recursive_mutex mutex_;
     QMap<QString, FinConDataValue> cache_;
     QMap<QString, QVector<std::function<void(const QJsonDocument&)>>> subscribers_;
     QMap<QString, IFinConDataProvider*> providers_;

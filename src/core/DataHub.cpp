@@ -10,7 +10,7 @@ FinConDataHub::FinConDataHub() {
 }
 
 void FinConDataHub::publish(const QString& topic, const QJsonDocument& data, int ttl) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
     cache_[topic] = {data, QDateTime::currentDateTime(), ttl};
 
     if (subscribers_.contains(topic)) {
@@ -21,7 +21,7 @@ void FinConDataHub::publish(const QString& topic, const QJsonDocument& data, int
 }
 
 void FinConDataHub::subscribe(const QString& topic, QObject* receiver, const std::function<void(const QJsonDocument&)>& callback) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
     subscribers_[topic].append(callback);
 
     if (cache_.contains(topic)) {
@@ -39,12 +39,12 @@ void FinConDataHub::subscribe(const QString& topic, QObject* receiver, const std
 }
 
 void FinConDataHub::registerProvider(const QString& topicPattern, IFinConDataProvider* provider) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
     providers_[topicPattern] = provider;
 }
 
 void FinConDataHub::onTick() {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
     QDateTime now = QDateTime::currentDateTime();
     auto it = cache_.begin();
     while (it != cache_.end()) {

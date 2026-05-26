@@ -17,6 +17,33 @@ FinConCommandBar::FinConCommandBar(QWidget* parent) : QWidget(parent, Qt::Framel
     setFixedSize(600, 400);
 
     input_->installEventFilter(this);
+
+    allActions_ = {
+        "Dashboard", "Markets", "Watchlist", "News", "Crypto Trading",
+        "Equity Trading", "Algo Trading", "Backtesting", "Trade Visualization",
+        "Portfolio", "Equity Research", "Derivatives", "QuantLib Suite",
+        "AI Chat", "Node Editor", "Settings", "Profile", "Logout"
+    };
+
+    connect(input_, &QLineEdit::textChanged, this, &FinConCommandBar::onTextChanged);
+    connect(results_, &QListWidget::itemActivated, this, &FinConCommandBar::onItemActivated);
+    connect(results_, &QListWidget::itemClicked, this, &FinConCommandBar::onItemActivated);
+}
+
+void FinConCommandBar::onTextChanged(const QString& text) {
+    results_->clear();
+    if (text.isEmpty()) return;
+
+    for (const auto& action : allActions_) {
+        if (action.contains(text, Qt::CaseInsensitive)) {
+            results_->addItem(action);
+        }
+    }
+}
+
+void FinConCommandBar::onItemActivated(QListWidgetItem* item) {
+    emit actionTriggered(item->text());
+    hide();
 }
 
 bool FinConCommandBar::eventFilter(QObject* obj, QEvent* event) {
