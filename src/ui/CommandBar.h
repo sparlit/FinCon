@@ -10,12 +10,20 @@ class FinConCommandBar : public QWidget {
 public:
     FinConCommandBar(QWidget* parent = nullptr);
 
+signals:
+    void actionTriggered(const QString& action);
+
 protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
+
+private slots:
+    void onTextChanged(const QString& text);
+    void onItemActivated(QListWidgetItem* item);
 
 private:
     QLineEdit* input_;
     QListWidget* results_;
+    QStringList allActions_;
 };
 
 }

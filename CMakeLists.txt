@@ -52,6 +52,7 @@ set(SOURCES
     src/core/ThemeManager.cpp
     src/core/DataHub.cpp
     src/core/Persistence.cpp
+    src/core/MockQuoteProducer.cpp
     src/core/CredentialManager.cpp
     src/services/AuthService.cpp
     src/services/PythonRunner.cpp

@@ -12,7 +12,7 @@ QString FinConThemeManager::generateStyleSheet() {
         QWidget {
             background-color: %bg_base%;
             color: %text_primary%;
-            font-family: 'Consolas', 'Courier New', monospace;
+            font-family: 'Noto Sans Mono', 'DejaVu Sans Mono', 'Consolas', monospace;
             font-size: %base_fs%px;
         }
         QMainWindow, QDialog {

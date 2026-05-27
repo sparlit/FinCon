@@ -1,6 +1,7 @@
 #pragma once
 #include <QMainWindow>
 #include <DockManager.h>
+#include <QToolBar>
 #include "NavigationBar.h"
 #include "Sidebar.h"
 #include "StatusBar.h"
@@ -24,6 +25,7 @@ private:
     FinConSidebar* sidebar_;
     FinConStatusBar* statusBar_;
     FinConCommandBar* commandBar_;
+    QToolBar* workspaceToolBar_;
 };
 
 }

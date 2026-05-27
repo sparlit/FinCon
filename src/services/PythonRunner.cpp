@@ -37,7 +37,9 @@ void FinConPythonRunner::processQueue() {
                 processQueue();
             });
 
-            proc->start("python3", QStringList() << "-c" << job.script << job.args);
+            proc->start("python3", QStringList() << "-" << job.args);
+            proc->write(job.script.toUtf8());
+            proc->closeWriteChannel();
             break;
         }
     }
