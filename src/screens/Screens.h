@@ -18,7 +18,7 @@ public:
     FinConMarketsScreen(QWidget* parent = nullptr);
 private:
     QTableView* view_;
-    FinConCore::FinConFinConMarketModel* model_;
+    FinConCore::FinConMarketModel* model_;
 };
 
 class FinConAIChatScreen : public IFinConScreen {

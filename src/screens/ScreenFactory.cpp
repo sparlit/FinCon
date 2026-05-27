@@ -2,6 +2,7 @@
 #include "Screens.h"
 #include "NodeEditorScreen.h"
 #include "QuantLibSuiteScreen.h"
+#include "MCPScreen.h"
 #include "core/ThemeManager.h"
 #include <QLabel>
 #include <QVBoxLayout>
@@ -38,6 +39,9 @@ QWidget* FinConScreenFactory::createScreen(const QString& name, QWidget* parent)
         flavor = FinConCore::FinConThemeFlavor::Analytics;
     } else if (name == "About") {
         screen = new FinConAboutScreen(parent);
+    } else if (name == "MCP Servers") {
+        screen = new FinConMCPScreen(parent);
+        flavor = FinConCore::FinConThemeFlavor::System;
     } else {
         screen = new IFinConScreen(parent);
         auto layout = new QVBoxLayout(screen);

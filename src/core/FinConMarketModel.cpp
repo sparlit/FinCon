@@ -3,18 +3,18 @@
 
 namespace FinConCore {
 
-FinConFinConMarketModel::FinConFinConMarketModel(QObject* parent) : QAbstractTableModel(parent) {}
-FinConFinConMarketModel::~FinConFinConMarketModel() {}
+FinConMarketModel::FinConMarketModel(QObject* parent) : QAbstractTableModel(parent) {}
+FinConMarketModel::~FinConMarketModel() {}
 
-int FinConFinConMarketModel::rowCount(const QModelIndex& parent) const {
+int FinConMarketModel::rowCount(const QModelIndex& parent) const {
     return data_.size();
 }
 
-int FinConFinConMarketModel::columnCount(const QModelIndex& parent) const {
+int FinConMarketModel::columnCount(const QModelIndex& parent) const {
     return 4;
 }
 
-QVariant FinConFinConMarketModel::data(const QModelIndex& index, int role) const {
+QVariant FinConMarketModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= data_.size()) return QVariant();
 
     const auto& row = data_[index.row()];
@@ -33,7 +33,7 @@ QVariant FinConFinConMarketModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-QVariant FinConFinConMarketModel::headerData(int section, Qt::Orientation orientation, int role) const {
+QVariant FinConMarketModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
             case 0: return "Symbol";
@@ -45,7 +45,7 @@ QVariant FinConFinConMarketModel::headerData(int section, Qt::Orientation orient
     return QVariant();
 }
 
-void FinConFinConMarketModel::updateQuote(const QJsonObject& quote) {
+void FinConMarketModel::updateQuote(const QJsonObject& quote) {
     QString symbol = quote["symbol"].toString();
     double price = quote["price"].toDouble();
 

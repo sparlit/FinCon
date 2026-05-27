@@ -40,7 +40,7 @@ FinConMarketsScreen::FinConMarketsScreen(QWidget* parent) : IFinConScreen(parent
     layout->addWidget(new QLabel("Global Markets Overview", this));
 
     view_ = new QTableView(this);
-    model_ = new FinConCore::FinConFinConMarketModel(this);
+    model_ = new FinConCore::FinConMarketModel(this);
     view_->setModel(model_);
     layout->addWidget(view_);
 

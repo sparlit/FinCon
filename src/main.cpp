@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    FinConCore::FinConFinConMockQuoteProducer mockProducer;
+    FinConCore::FinConMockQuoteProducer mockProducer;
     FinConCore::FinConMockNewsProducer newsProducer;
     FinConCore::FinConMockEconomicsProducer econProducer;
 
