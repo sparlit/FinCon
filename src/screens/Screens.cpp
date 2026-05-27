@@ -47,4 +47,30 @@ FinConAIChatScreen::FinConAIChatScreen(QWidget* parent) : IFinConScreen(parent) 
     layout->addLayout(hLayout);
 }
 
+FinConEquityResearchScreen::FinConEquityResearchScreen(QWidget* parent) : IFinConScreen(parent) {
+    auto layout = new QGridLayout(this);
+    layout->setSpacing(4);
+
+    auto fPanel = new QTableWidget(5, 2, this);
+    fPanel->setHorizontalHeaderLabels({"Fundamentals", "Value"});
+    layout->addWidget(fPanel, 0, 0);
+
+    auto tPanel = new QLabel("Technicals Chart Placeholder", this);
+    layout->addWidget(tPanel, 0, 1);
+
+    auto pPanel = new QTableWidget(5, 3, this);
+    pPanel->setHorizontalHeaderLabels({"Peer", "Price", "Cap"});
+    layout->addWidget(pPanel, 1, 0);
+
+    auto sPanel = new QLabel("Sentiment Analysis Placeholder", this);
+    layout->addWidget(sPanel, 1, 1);
+}
+
+FinConPortfolioScreen::FinConPortfolioScreen(QWidget* parent) : IFinConScreen(parent) {
+    auto layout = new QVBoxLayout(this);
+    auto table = new QTableWidget(10, 5, this);
+    table->setHorizontalHeaderLabels({"Holding", "Qty", "Avg Price", "Current", "P&L"});
+    layout->addWidget(table);
+}
+
 }

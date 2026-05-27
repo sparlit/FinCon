@@ -45,6 +45,7 @@ private:
     QMap<QString, FinConDataValue> cache_;
     QMap<QString, QVector<std::function<void(const QJsonDocument&)>>> subscribers_;
     QMap<QString, IFinConDataProvider*> providers_;
+    QMap<IFinConDataProvider*, QDateTime> lastRefresh_;
     QThread* workerThread_;
     QTimer* tickTimer_;
 };

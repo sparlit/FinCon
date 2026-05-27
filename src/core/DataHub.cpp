@@ -69,7 +69,11 @@ void FinConDataHub::subscribe(const QString& topic, QObject* receiver, const std
 
     if (hasData) callback(initialData);
     for (auto* provider : providersToRefresh) {
-        provider->refresh(topic);
+        // Simple rate limit: 1 request per second per producer
+        if (!lastRefresh_.contains(provider) || lastRefresh_[provider].addMSecs(1000) < QDateTime::currentDateTime()) {
+            lastRefresh_[provider] = QDateTime::currentDateTime();
+            provider->refresh(topic);
+        }
     }
 }
 

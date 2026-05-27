@@ -11,6 +11,7 @@ struct FinConPythonJob {
     QStringList args;
     std::function<void(QString)> onOutput;
     std::function<void(int)> onFinished;
+    int timeoutMs = 30000;
 };
 
 class FinConPythonRunner : public QObject {

@@ -27,4 +27,16 @@ public:
     FinConAIChatScreen(QWidget* parent = nullptr);
 };
 
+class FinConEquityResearchScreen : public IFinConScreen {
+    Q_OBJECT
+public:
+    FinConEquityResearchScreen(QWidget* parent = nullptr);
+};
+
+class FinConPortfolioScreen : public IFinConScreen {
+    Q_OBJECT
+public:
+    FinConPortfolioScreen(QWidget* parent = nullptr);
+};
+
 }

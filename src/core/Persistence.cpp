@@ -42,6 +42,13 @@ void FinConPersistence::runMigrations() {
         query.exec("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, session_token TEXT)");
         query.exec("INSERT INTO migrations (version) VALUES (1)");
     }
+    if (currentVersion < 2) {
+        FINCON_LOG_INFO("DB", "Running migration 2");
+        query.exec("CREATE TABLE watchlists (id INTEGER PRIMARY KEY, name TEXT, symbols TEXT)");
+        query.exec("CREATE TABLE portfolios (id INTEGER PRIMARY KEY, name TEXT, account_id TEXT)");
+        query.exec("CREATE TABLE orders (id INTEGER PRIMARY KEY, symbol TEXT, qty REAL, side TEXT, status TEXT)");
+        query.exec("INSERT INTO migrations (version) VALUES (2)");
+    }
 }
 
 }
