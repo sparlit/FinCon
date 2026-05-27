@@ -15,12 +15,12 @@ public:
     }
 
     void login(const QString& email, const QString& password, std::function<void(const FinConCore::FinConResult<bool>&)> callback);
-    bool isAuthenticated() const { return authenticated_; }
+    bool isAuthenticated() const { return FinConAuth_Authenticated; }
     QString username() const { return "User"; }
 
 private:
-    FinConAuthService() : authenticated_(false) {}
-    bool authenticated_;
+    FinConAuthService() : FinConAuth_Authenticated(false) {}
+    bool FinConAuth_Authenticated;
 };
 
 }

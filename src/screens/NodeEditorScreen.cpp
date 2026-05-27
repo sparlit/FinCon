@@ -1,16 +1,32 @@
+#include "core/Logger.h"
 #include "NodeEditorScreen.h"
+#include "core/DataHub.h"
 #include <QVBoxLayout>
 
 namespace FinConScreens {
 
 FinConNodeEditorScreen::FinConNodeEditorScreen(QWidget* parent) : IFinConScreen(parent) {
-    auto layout = new QVBoxLayout(this);
-    scene_ = new QGraphicsScene(this);
-    view_ = new QGraphicsView(scene_, this);
-    view_->setRenderHint(QPainter::Antialiasing);
-    layout->addWidget(view_);
+    auto FinConLayout = new QVBoxLayout(this);
+    FinConNode_Scene = new QGraphicsScene(this);
+    FinConNode_View = new QGraphicsView(FinConNode_Scene, this);
+    FinConNode_View->setRenderHint(QPainter::Antialiasing);
 
-    scene_->addText("FinCon Node Editor");
+    FinConBtn_Execute = new QPushButton("Execute Workflow (DAG)", this);
+    connect(FinConBtn_Execute, &QPushButton::clicked, this, &FinConNodeEditorScreen::onExecuteWorkflow);
+
+    FinConLayout->addWidget(FinConNode_View);
+    FinConLayout->addWidget(FinConBtn_Execute);
+
+    FinConNode_Scene->addText("FinCon Node Editor - Construct DAGs here");
+}
+
+void FinConNodeEditorScreen::onExecuteWorkflow() {
+    FINCON_LOG_INFO("NodeEditor", "Executing Workflow... Validating DAG");
+    // Mock execution
+    QJsonObject res;
+    res["status"] = "success";
+    res["output"] = "Strategy execution triggered via DataHub";
+    FinConCore::FinConDataHub::instance().publish("agent/workflow/run", QJsonDocument(res), 60);
 }
 
 }

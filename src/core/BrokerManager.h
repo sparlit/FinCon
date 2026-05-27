@@ -12,8 +12,8 @@ class FinConExchangeSession : public QObject {
 public:
     FinConExchangeSession(const QString& name, QObject* parent = nullptr)
         : QObject(parent), name_(name) {
-        reconnectTimer_ = new QTimer(this);
-        connect(reconnectTimer_, &QTimer::timeout, this, &FinConExchangeSession::connectExchange);
+        FinConNet_ReconnectTimer = new QTimer(this);
+        connect(FinConNet_ReconnectTimer, &QTimer::timeout, this, &FinConExchangeSession::connectExchange);
     }
 
     void start() {
@@ -26,18 +26,18 @@ private slots:
         // Mock connection failure/success
         bool success = true;
         if (!success) {
-            FINCON_LOG_WARN("Exchange", "Connection failed for " + name_.toStdString() + ". Retrying in " + std::to_string(backoff_) + "ms");
-            reconnectTimer_->start(backoff_);
-            backoff_ = std::min(backoff_ * 2, 30000);
+            FINCON_LOG_WARN("Exchange", "Connection failed for " + name_.toStdString() + ". Retrying in " + std::to_string(FinConNet_Backoff) + "ms");
+            FinConNet_ReconnectTimer->start(FinConNet_Backoff);
+            FinConNet_Backoff = std::min(FinConNet_Backoff * 2, 30000);
         } else {
-            backoff_ = 1000;
+            FinConNet_Backoff = 1000;
         }
     }
 
 private:
     QString name_;
-    QTimer* reconnectTimer_;
-    int backoff_ = 1000;
+    QTimer* FinConNet_ReconnectTimer;
+    int FinConNet_Backoff = 1000;
 };
 
 class FinConBrokerManager : public QObject {
@@ -49,16 +49,16 @@ public:
     }
 
     void startSession(const QString& brokerName) {
-        if (!sessions_.contains(brokerName)) {
+        if (!FinConBroker_Sessions.contains(brokerName)) {
             auto* session = new FinConExchangeSession(brokerName, this);
-            sessions_[brokerName] = session;
+            FinConBroker_Sessions[brokerName] = session;
             session->start();
         }
     }
 
 private:
     FinConBrokerManager() {}
-    QMap<QString, FinConExchangeSession*> sessions_;
+    QMap<QString, FinConExchangeSession*> FinConBroker_Sessions;
 };
 
 }

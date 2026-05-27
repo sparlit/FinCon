@@ -13,7 +13,7 @@ signals:
     void screenRequested(const QString& name);
 
 private:
-    QListWidget* list_;
+    QListWidget* FinConSidebar_List;
 };
 
 }

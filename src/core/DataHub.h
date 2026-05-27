@@ -13,7 +13,7 @@ namespace FinConCore {
 
 struct FinConDataValue {
     QJsonDocument data;
-    QDateTime timestamp;
+    QDateTime FinConStr_Timestamp;
     int ttlSeconds;
 };
 
@@ -41,17 +41,17 @@ private slots:
 private:
     FinConDataHub();
     ~FinConDataHub();
-    QReadWriteLock rwLock_;
-    QMap<QString, FinConDataValue> cache_;
+    QReadWriteLock FinConDataHub_RWLock;
+    QMap<QString, FinConDataValue> FinConDataHub_Cache;
     struct Subscriber {
         QObject* receiver;
         std::function<void(const QJsonDocument&)> callback;
     };
-    QMap<QString, QVector<Subscriber>> subscribers_;
-    QMap<QString, IFinConDataProvider*> providers_;
-    QMap<IFinConDataProvider*, QDateTime> lastRefresh_;
-    QThread* workerThread_;
-    QTimer* tickTimer_;
+    QMap<QString, QVector<Subscriber>> FinConDataHub_Subscribers;
+    QMap<QString, IFinConDataProvider*> FinConDataHub_Providers;
+    QMap<IFinConDataProvider*, QDateTime> FinConDataHub_LastRefresh;
+    QThread* FinConDataHub_WorkerThread;
+    QTimer* FinConDataHub_TickTimer;
 };
 
 }

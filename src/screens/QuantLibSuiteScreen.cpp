@@ -5,10 +5,10 @@
 namespace FinConScreens {
 
 FinConQuantLibSuiteScreen::FinConQuantLibSuiteScreen(QWidget* parent) : IFinConScreen(parent) {
-    auto layout = new QVBoxLayout(this);
+    auto FinConLayout = new QVBoxLayout(this);
 
-    toolSelector_ = new QComboBox(this);
-    toolSelector_->addItems({
+    FinConQuant_ToolSelector = new QComboBox(this);
+    FinConQuant_ToolSelector->addItems({
         "Yield Curves", "Black-Scholes", "Binomial Trees", "Monte Carlo",
         "VaR", "CVaR", "Duration", "Convexity", "Volatility Surface",
         "OAS", "Efficient Frontier", "Bond Pricing", "Swap Valuation",
@@ -16,24 +16,24 @@ FinConQuantLibSuiteScreen::FinConQuantLibSuiteScreen(QWidget* parent) : IFinConS
         "CAPM", "Black-Litterman"
     });
 
-    layout->addWidget(new QLabel("Select Analytics Tool:", this));
-    layout->addWidget(toolSelector_);
+    FinConLayout->addWidget(new QLabel("Select Analytics Tool:", this));
+    FinConLayout->addWidget(FinConQuant_ToolSelector);
 
-    resultsTable_ = new QTableWidget(10, 2, this);
-    resultsTable_->setHorizontalHeaderLabels({"Parameter", "Value"});
-    layout->addWidget(resultsTable_);
+    FinConQuant_ResultsTable = new QTableWidget(10, 2, this);
+    FinConQuant_ResultsTable->setHorizontalHeaderLabels({"Parameter", "Value"});
+    FinConLayout->addWidget(FinConQuant_ResultsTable);
 
-    connect(toolSelector_, qOverload<int>(&QComboBox::currentIndexChanged), this, &FinConQuantLibSuiteScreen::onToolChanged);
+    connect(FinConQuant_ToolSelector, qOverload<int>(&QComboBox::currentIndexChanged), this, &FinConQuantLibSuiteScreen::onToolChanged);
     onToolChanged(0);
 }
 
-void FinConQuantLibSuiteScreen::onToolChanged(int index) {
-    resultsTable_->clearContents();
-    QString tool = toolSelector_->itemText(index);
+void FinConQuantLibSuiteScreen::onToolChanged(int FinConIdx_General) {
+    FinConQuant_ResultsTable->clearContents();
+    QString FinConStr_Tool = FinConQuant_ToolSelector->itemText(FinConIdx_General);
 
-    if (tool == "Black-Scholes") {
-        resultsTable_->setItem(0, 0, new QTableWidgetItem("Call Price"));
-        resultsTable_->setItem(0, 1, new QTableWidgetItem("5.42"));
+    if (FinConStr_Tool == "Black-Scholes") {
+        FinConQuant_ResultsTable->setItem(0, 0, new QTableWidgetItem("Call Price"));
+        FinConQuant_ResultsTable->setItem(0, 1, new QTableWidgetItem("5.42"));
     }
 }
 

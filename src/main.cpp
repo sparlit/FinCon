@@ -36,17 +36,17 @@ int main(int argc, char *argv[]) {
 
     QDialog loginDlg;
     loginDlg.setWindowTitle("FinCon Terminal - Login");
-    auto layout = new QVBoxLayout(&loginDlg);
+    auto FinConLayout = new QVBoxLayout(&loginDlg);
     auto email = new QLineEdit(&loginDlg);
     email->setPlaceholderText("Email");
     auto password = new QLineEdit(&loginDlg);
     password->setEchoMode(QLineEdit::Password);
     password->setPlaceholderText("Password");
     auto loginBtn = new QPushButton("Login", &loginDlg);
-    layout->addWidget(new QLabel("Welcome to FinCon Terminal"));
-    layout->addWidget(email);
-    layout->addWidget(password);
-    layout->addWidget(loginBtn);
+    FinConLayout->addWidget(new QLabel("Welcome to FinCon Terminal"));
+    FinConLayout->addWidget(email);
+    FinConLayout->addWidget(password);
+    FinConLayout->addWidget(loginBtn);
 
     QObject::connect(loginBtn, &QPushButton::clicked, [&]() {
         FinConServices::FinConAuthService::instance().login(email->text(), password->text(), [&](auto res) {

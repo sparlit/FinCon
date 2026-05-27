@@ -20,12 +20,12 @@ private slots:
 
 private:
     void setupUi();
-    ads::CDockManager* dockManager_;
-    FinConNavigationBar* navBar_;
-    FinConSidebar* sidebar_;
-    FinConStatusBar* statusBar_;
-    FinConCommandBar* commandBar_;
-    QToolBar* workspaceToolBar_;
+    ads::CDockManager* FinConMain_DockManager;
+    FinConNavigationBar* FinConMain_NavBar;
+    FinConSidebar* FinConMain_Sidebar;
+    FinConStatusBar* FinConMain_StatusBar;
+    FinConCommandBar* FinConMain_CommandBar;
+    QToolBar* FinConMain_WorkspaceToolBar;
 };
 
 }

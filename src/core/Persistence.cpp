@@ -8,15 +8,15 @@
 namespace FinConCore {
 
 FinConPersistence::FinConPersistence() {
-    db_ = QSqlDatabase::addDatabase("QSQLITE");
+    FinConPersistence_Db = QSqlDatabase::addDatabase("QSQLITE");
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir().mkpath(path);
-    db_.setDatabaseName(path + "/terminal.db");
+    FinConPersistence_Db.setDatabaseName(path + "/terminal.db");
 }
 
 bool FinConPersistence::init() {
-    if (!db_.open()) {
-        FINCON_LOG_ERROR("DB", "Failed to open database: " + db_.lastError().text().toStdString());
+    if (!FinConPersistence_Db.open()) {
+        FINCON_LOG_ERROR("DB", "Failed to open database: " + FinConPersistence_Db.lastError().text().toStdString());
         return false;
     }
 
@@ -44,9 +44,9 @@ void FinConPersistence::runMigrations() {
     }
     if (currentVersion < 2) {
         FINCON_LOG_INFO("DB", "Running migration 2");
-        query.exec("CREATE TABLE watchlists (id INTEGER PRIMARY KEY, name TEXT, symbols TEXT)");
+        query.exec("CREATE TABLE watchlists (id INTEGER PRIMARY KEY, name TEXT, FinConStr_Symbols TEXT)");
         query.exec("CREATE TABLE portfolios (id INTEGER PRIMARY KEY, name TEXT, account_id TEXT)");
-        query.exec("CREATE TABLE orders (id INTEGER PRIMARY KEY, symbol TEXT, qty REAL, side TEXT, status TEXT)");
+        query.exec("CREATE TABLE orders (id INTEGER PRIMARY KEY, FinConStr_Symbol TEXT, qty REAL, side TEXT, status TEXT)");
         query.exec("INSERT INTO migrations (version) VALUES (2)");
     }
 }

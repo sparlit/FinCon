@@ -2,6 +2,7 @@
 #include "IScreen.h"
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QPushButton>
 
 namespace FinConScreens {
 
@@ -10,9 +11,13 @@ class FinConNodeEditorScreen : public IFinConScreen {
 public:
     FinConNodeEditorScreen(QWidget* parent = nullptr);
 
+private slots:
+    void onExecuteWorkflow();
+
 private:
-    QGraphicsView* view_;
-    QGraphicsScene* scene_;
+    QGraphicsView* FinConNode_View;
+    QGraphicsScene* FinConNode_Scene;
+    QPushButton* FinConBtn_Execute;
 };
 
 }

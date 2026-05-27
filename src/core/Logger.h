@@ -22,8 +22,8 @@ public:
     }
 
     void log(FinConLogLevel level, const std::string& tag, const std::string& message) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
+        std::lock_guard<std::mutex> lock(FinConLogger_Mutex);
+        QString FinConStr_Timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
         std::string levelStr;
         switch (level) {
             case FinConLogLevel::Debug: levelStr = "DEBUG"; break;
@@ -32,24 +32,24 @@ public:
             case FinConLogLevel::Error: levelStr = "ERROR"; break;
         }
 
-        std::string formatted = timestamp.toStdString() + " [" + levelStr + "] [" + tag + "] " + message;
+        std::string formatted = FinConStr_Timestamp.toStdString() + " [" + levelStr + "] [" + tag + "] " + message;
 
         std::cerr << formatted << std::endl;
-        if (logFile_.is_open()) {
-            logFile_ << formatted << std::endl;
+        if (FinConLogger_File.is_open()) {
+            FinConLogger_File << formatted << std::endl;
         }
     }
 
 private:
     FinConLogger() {
-        logFile_.open("terminal.log", std::ios::app);
+        FinConLogger_File.open("terminal.log", std::ios::app);
     }
     ~FinConLogger() {
-        if (logFile_.is_open()) logFile_.close();
+        if (FinConLogger_File.is_open()) FinConLogger_File.close();
     }
 
-    std::mutex mutex_;
-    std::ofstream logFile_;
+    std::mutex FinConLogger_Mutex;
+    std::ofstream FinConLogger_File;
 };
 
 #define FINCON_LOG_DEBUG(tag, msg) FinConCore::FinConLogger::instance().log(FinConCore::FinConLogLevel::Debug, tag, msg)

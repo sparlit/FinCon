@@ -14,8 +14,8 @@ private slots:
     void updateTime();
 
 private:
-    QLabel* clockLabel_;
-    QLabel* userLabel_;
+    QLabel* FinConNav_ClockLabel;
+    QLabel* FinConNav_UserLabel;
 };
 
 }

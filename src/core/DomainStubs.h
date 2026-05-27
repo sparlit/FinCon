@@ -8,24 +8,32 @@ namespace FinConCore {
 
 class FinConGenericBroker : public IFinConBroker {
 public:
-    void placeOrder(const QJsonObject& order) override {
-        FINCON_LOG_INFO("Broker", "Placing order: " + order["symbol"].toString().toStdString());
+    void placeOrder(const QJsonObject& FinConObj_Order) override {
+        FINCON_LOG_INFO("Broker", "Placing order: " + FinConObj_Order["FinConStr_Symbol"].toString().toStdString());
     }
-    void cancelOrder(const QString& orderId) override {
-        FINCON_LOG_INFO("Broker", "Cancelling order: " + orderId.toStdString());
+    void cancelOrder(const QString& FinConStr_OrderId) override {
+        FINCON_LOG_INFO("Broker", "Cancelling order: " + FinConStr_OrderId.toStdString());
     }
 };
 
+class FinConIBKRBroker : public FinConGenericBroker {};
+class FinConZerodhaBroker : public FinConGenericBroker {};
+class FinConAlpacaBroker : public FinConGenericBroker {};
+
 class FinConPersonaAgent : public IFinConAgent {
 public:
-    FinConPersonaAgent(const QString& name) : name_(name) {}
-    void runAnalysis(const QString& prompt) override {
-        FINCON_LOG_INFO("Agent", name_.toStdString() + " analyzing: " + prompt.toStdString());
+    FinConPersonaAgent(const QString& FinConStr_Name) : FinConStr_Name_(FinConStr_Name) {}
+    void runAnalysis(const QString& FinConStr_Prompt) override {
+        FINCON_LOG_INFO("Agent", FinConStr_Name_.toStdString() + " analyzing: " + FinConStr_Prompt.toStdString());
     }
-    QString personaName() const override { return name_; }
+    QString personaName() const override { return FinConStr_Name_; }
 private:
-    QString name_;
+    QString FinConStr_Name_;
 };
+
+class FinConBuffettAgent : public FinConPersonaAgent { public: FinConBuffettAgent() : FinConPersonaAgent("Buffett") {} };
+class FinConGrahamAgent : public FinConPersonaAgent { public: FinConGrahamAgent() : FinConPersonaAgent("Graham") {} };
+class FinConLynchAgent : public FinConPersonaAgent { public: FinConLynchAgent() : FinConPersonaAgent("Lynch") {} };
 
 class FinConDomainRegistry {
 public:

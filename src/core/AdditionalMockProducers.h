@@ -11,9 +11,9 @@ class FinConMockNewsProducer : public QObject, public IFinConDataProvider {
     Q_OBJECT
 public:
     FinConMockNewsProducer() {
-        timer_ = new QTimer(this);
-        connect(timer_, &QTimer::timeout, this, &FinConMockNewsProducer::publishNews);
-        timer_->start(10000); // News every 10 seconds
+        FinConMockQuote_Timer = new QTimer(this);
+        connect(FinConMockQuote_Timer, &QTimer::timeout, this, &FinConMockNewsProducer::publishNews);
+        FinConMockQuote_Timer->start(10000); // News every 10 seconds
     }
 
     void refresh(const QString& topic) override {
@@ -25,23 +25,23 @@ private slots:
         QJsonObject obj;
         obj["headline"] = "Market indices hit record highs on tech rally";
         obj["source"] = "FinCon News Service";
-        obj["timestamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+        obj["FinConStr_Timestamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
 
         FinConDataHub::instance().publish("news/top", QJsonDocument(obj), 300);
         FINCON_LOG_INFO("NewsProducer", "Published top news headline");
     }
 
 private:
-    QTimer* timer_;
+    QTimer* FinConMockQuote_Timer;
 };
 
 class FinConMockEconomicsProducer : public QObject, public IFinConDataProvider {
     Q_OBJECT
 public:
     FinConMockEconomicsProducer() {
-        timer_ = new QTimer(this);
-        connect(timer_, &QTimer::timeout, this, &FinConMockEconomicsProducer::publishEconomics);
-        timer_->start(30000); // Economics every 30 seconds
+        FinConMockQuote_Timer = new QTimer(this);
+        connect(FinConMockQuote_Timer, &QTimer::timeout, this, &FinConMockEconomicsProducer::publishEconomics);
+        FinConMockQuote_Timer->start(30000); // Economics every 30 seconds
     }
 
     void refresh(const QString& topic) override {
@@ -60,7 +60,7 @@ private slots:
     }
 
 private:
-    QTimer* timer_;
+    QTimer* FinConMockQuote_Timer;
 };
 
 }

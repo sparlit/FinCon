@@ -2,9 +2,9 @@
 
 namespace FinConCore {
 
-FinConThemeTokens FinConThemeManager::tokens(FinConThemeFlavor flavor, FinConThemeDensity density) {
+FinConThemeTokens FinConThemeManager::tokens(FinConThemeFlavor FinConEnum_Flavor, FinConThemeDensity FinConEnum_Density) {
     FinConThemeTokens t;
-    switch(flavor) {
+    switch(FinConEnum_Flavor) {
         case FinConThemeFlavor::Trading:   t.accent_amber = "#3b82f6"; break;
         case FinConThemeFlavor::Analytics: t.accent_amber = "#8b5cf6"; break;
         case FinConThemeFlavor::Data:      t.accent_amber = "#06b6d4"; break;
@@ -15,13 +15,13 @@ FinConThemeTokens FinConThemeManager::tokens(FinConThemeFlavor flavor, FinConThe
     return t;
 }
 
-QString FinConThemeManager::generateStyleSheet(FinConThemeFlavor flavor, FinConThemeDensity density) {
-    FinConThemeTokens t = tokens(flavor, density);
-    int padding = 4;
-    if (density == FinConThemeDensity::Compact) padding = 2;
-    if (density == FinConThemeDensity::Comfortable) padding = 8;
+QString FinConThemeManager::generateStyleSheet(FinConThemeFlavor FinConEnum_Flavor, FinConThemeDensity FinConEnum_Density) {
+    FinConThemeTokens t = tokens(FinConEnum_Flavor, FinConEnum_Density);
+    int FinConVal_Padding = 4;
+    if (FinConEnum_Density == FinConThemeDensity::Compact) FinConVal_Padding = 2;
+    if (FinConEnum_Density == FinConThemeDensity::Comfortable) FinConVal_Padding = 8;
 
-    QString qss = R"(
+    QString FinConStr_QSS = R"(
         QWidget {
             background-color: %bg_base%;
             color: %text_primary%;
@@ -42,7 +42,7 @@ QString FinConThemeManager::generateStyleSheet(FinConThemeFlavor flavor, FinConT
             background-color: %bg_raised%;
             border: 2px solid %accent_amber%;
             border-radius: 4px;
-            padding: %padding%px %padding_double%px;
+            padding: %FinConVal_Padding%px %FinConVal_Padding_double%px;
             color: %text_primary%;
             font-weight: bold;
         }
@@ -55,12 +55,12 @@ QString FinConThemeManager::generateStyleSheet(FinConThemeFlavor flavor, FinConT
             border: 1px solid %bg_raised%;
             border-radius: 2px;
             color: %text_primary%;
-            padding: %padding%px;
+            padding: %FinConVal_Padding%px;
         }
         QHeaderView::section {
             background-color: %bg_surface%;
             color: %accent_amber%;
-            padding: %padding%px;
+            padding: %FinConVal_Padding%px;
             border: 1px solid %bg_raised%;
             font-weight: bold;
         }
@@ -86,7 +86,7 @@ QString FinConThemeManager::generateStyleSheet(FinConThemeFlavor flavor, FinConT
         ads--CDockWidgetTab { background-color: %bg_surface%; border-top: 2px solid transparent; }
         ads--CDockWidgetTab[active="true"] { border-top: 2px solid %accent_amber%; background-color: %bg_raised%; }
     )";
-    return qss
+    return FinConStr_QSS
         .replace("%bg_base%", t.bg_base)
         .replace("%bg_surface%", t.bg_surface)
         .replace("%bg_raised%", t.bg_raised)
@@ -99,8 +99,8 @@ QString FinConThemeManager::generateStyleSheet(FinConThemeFlavor flavor, FinConT
         .replace("%title_fs%", QString::number(t.font_size_title))
         .replace("%heading_fs%", QString::number(t.font_size_heading))
         .replace("%caption_fs%", QString::number(t.font_size_caption))
-        .replace("%padding%", QString::number(padding))
-        .replace("%padding_double%", QString::number(padding * 2));
+        .replace("%FinConVal_Padding%", QString::number(FinConVal_Padding))
+        .replace("%FinConVal_Padding_double%", QString::number(FinConVal_Padding * 2));
 }
 
 }

@@ -13,9 +13,9 @@ class FinConMockQuoteProducer : public QObject, public IFinConDataProvider {
     Q_OBJECT
 public:
     FinConMockQuoteProducer() {
-        timer_ = new QTimer(this);
-        connect(timer_, &QTimer::timeout, this, &FinConMockQuoteProducer::publishQuotes);
-        timer_->start(2000);
+        FinConMockQuote_Timer = new QTimer(this);
+        connect(FinConMockQuote_Timer, &QTimer::timeout, this, &FinConMockQuoteProducer::publishQuotes);
+        FinConMockQuote_Timer->start(2000);
     }
 
     void refresh(const QString& topic) override {
@@ -32,17 +32,17 @@ private slots:
 
 private:
     void publishSingle(const QString& topic) {
-        double price = (double)QRandomGenerator::global()->bounded(10000, 100000) / 100.0;
+        double FinConVal_Price = (double)QRandomGenerator::global()->bounded(10000, 100000) / 100.0;
         QJsonObject obj;
-        obj["symbol"] = topic.mid(topic.indexOf('/') + 1);
-        obj["price"] = price;
-        obj["timestamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+        obj["FinConStr_Symbol"] = topic.mid(topic.indexOf('/') + 1);
+        obj["FinConVal_Price"] = FinConVal_Price;
+        obj["FinConStr_Timestamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
 
         FinConDataHub::instance().publish(topic, QJsonDocument(obj), 30);
-        FINCON_LOG_INFO("MockProducer", "Published " + topic.toStdString() + ": " + std::to_string(price));
+        FINCON_LOG_INFO("MockProducer", "Published " + topic.toStdString() + ": " + std::to_string(FinConVal_Price));
     }
 
-    QTimer* timer_;
+    QTimer* FinConMockQuote_Timer;
 };
 
 }

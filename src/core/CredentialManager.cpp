@@ -88,9 +88,43 @@ FinConResult<QString> FinConCredentialManager::getPassword(const QString& servic
         return FinConResult<QString>(msg);
     }
     if (!password) return FinConResult<QString>(QString(""));
-    QString res = QString::fromUtf8(password);
+    QString FinConRes = QString::fromUtf8(password);
     secret_password_free(password);
-    return FinConResult<QString>(res);
+    return FinConResult<QString>(FinConRes);
+#elif defined(_WIN32)
+    QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/secrets/";
+    QFile file(path + service + "_" + account + ".bin");
+    if (!file.open(QIODevice::ReadOnly)) return FinConResult<QString>(QString(""));
+
+    QByteArray cipherText = file.readAll();
+    file.close();
+
+    DATA_BLOB dataIn, dataOut;
+    dataIn.pbData = (BYTE*)cipherText.data();
+    dataIn.cbData = cipherText.size();
+
+    if (CryptUnprotectData(&dataIn, NULL, NULL, NULL, NULL, 0, &dataOut)) {
+        QString result = QString::fromUtf8((const char*)dataOut.pbData, dataOut.cbData);
+        LocalFree(dataOut.pbData);
+        return FinConResult<QString>(result);
+    }
+    return FinConResult<QString>(std::string("Win32 CryptUnprotectData failed"));
+#elif defined(__APPLE__)
+    void* passwordData = nullptr;
+    UInt32 passwordLength = 0;
+    OSStatus status = SecKeychainFindGenericPassword(
+        NULL,
+        service.length(), service.toUtf8().constData(),
+        account.length(), account.toUtf8().constData(),
+        &passwordLength, &passwordData,
+        NULL
+    );
+    if (status == errSecSuccess) {
+        QString result = QString::fromUtf8((const char*)passwordData, passwordLength);
+        SecKeychainItemFreeContent(NULL, passwordData);
+        return FinConResult<QString>(result);
+    }
+    return FinConResult<QString>(QString(""));
 #else
     return FinConResult<QString>(QString(""));
 #endif

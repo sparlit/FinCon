@@ -30,8 +30,8 @@ enum class FinConThemeFlavor {
 
 class FinConThemeManager {
 public:
-    static QString generateStyleSheet(FinConThemeFlavor flavor = FinConThemeFlavor::Default, FinConThemeDensity density = FinConThemeDensity::Default);
-    static FinConThemeTokens tokens(FinConThemeFlavor flavor = FinConThemeFlavor::Default, FinConThemeDensity density = FinConThemeDensity::Default);
+    static QString generateStyleSheet(FinConThemeFlavor FinConEnum_Flavor = FinConThemeFlavor::Default, FinConThemeDensity FinConEnum_Density = FinConThemeDensity::Default);
+    static FinConThemeTokens tokens(FinConThemeFlavor FinConEnum_Flavor = FinConThemeFlavor::Default, FinConThemeDensity FinConEnum_Density = FinConThemeDensity::Default);
 };
 
 }

@@ -10,8 +10,8 @@ public:
     FinConStatusBar(QWidget* parent = nullptr);
 
 private:
-    QLabel* symbolLabel_;
-    QLabel* statusLabel_;
+    QLabel* FinConStatus_SymbolLabel;
+    QLabel* FinConStatus_StatusLabel;
 };
 
 }
