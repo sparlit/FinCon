@@ -1,5 +1,6 @@
 #include "PythonRunner.h"
 #include "core/Logger.h"
+#include <QTimer>
 
 namespace FinConServices {
 
@@ -9,8 +10,9 @@ FinConPythonRunner::FinConPythonRunner() {
 
 void FinConPythonRunner::runScript(const QString& script, const QStringList& args,
                              std::function<void(QString)> onOutput,
-                             std::function<void(int)> onFinished) {
-    queue_.enqueue({script, args, onOutput, onFinished});
+                             std::function<void(int)> onFinished,
+                             int timeoutMs) {
+    queue_.enqueue({script, args, onOutput, onFinished, timeoutMs});
     processQueue();
 }
 
@@ -27,6 +29,13 @@ void FinConPythonRunner::processQueue() {
             connect(proc, &QProcess::readyReadStandardOutput, this, [this, i, job]() {
                 QString out = currentProcesses_[i]->readAllStandardOutput();
                 if (job.onOutput) job.onOutput(out);
+            });
+
+            QTimer::singleShot(job.timeoutMs, proc, [proc, i, this]() {
+                if (proc->state() != QProcess::NotRunning) {
+                    FINCON_LOG_WARN("Python", "Process timed out. Killing...");
+                    proc->kill();
+                }
             });
 
             connect(proc, &QProcess::finished, this, [this, i, job](int exitCode) {

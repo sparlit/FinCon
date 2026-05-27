@@ -39,10 +39,23 @@ void FinConCommandBar::onTextChanged(const QString& text) {
     results_->clear();
     if (text.isEmpty()) return;
 
+    QVector<std::pair<int, QString>> matches;
     for (const auto& action : allActions_) {
-        if (action.contains(text, Qt::CaseInsensitive)) {
-            results_->addItem(action);
+        int score = 0;
+        if (action.startsWith(text, Qt::CaseInsensitive)) score += 100;
+        else if (action.contains(text, Qt::CaseInsensitive)) score += 50;
+
+        if (score > 0) {
+            matches.push_back({score, action});
         }
+    }
+
+    std::sort(matches.begin(), matches.end(), [](const auto& a, const auto& b) {
+        return a.first > b.first;
+    });
+
+    for (const auto& match : matches) {
+        results_->addItem(match.second);
     }
 }
 

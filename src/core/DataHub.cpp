@@ -4,52 +4,99 @@
 namespace FinConCore {
 
 FinConDataHub::FinConDataHub() {
-    tickTimer_ = new QTimer(this);
-    connect(tickTimer_, &QTimer::timeout, this, &FinConDataHub::onTick);
-    tickTimer_->start(1000);
+    workerThread_ = new QThread(this);
+    workerThread_->setObjectName("FinConDataHubWorker");
+
+    tickTimer_ = new QTimer(nullptr);
+    tickTimer_->setInterval(1000);
+    tickTimer_->moveToThread(workerThread_);
+
+    connect(tickTimer_, &QTimer::timeout, this, &FinConDataHub::onTick, Qt::DirectConnection);
+    connect(workerThread_, &QThread::started, tickTimer_, [this](){ tickTimer_->start(); });
+    connect(workerThread_, &QThread::finished, tickTimer_, &QTimer::deleteLater);
+
+    workerThread_->start();
+}
+
+FinConDataHub::~FinConDataHub() {
+    workerThread_->quit();
+    workerThread_->wait();
 }
 
 void FinConDataHub::publish(const QString& topic, const QJsonDocument& data, int ttl) {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-    cache_[topic] = {data, QDateTime::currentDateTime(), ttl};
-
-    if (subscribers_.contains(topic)) {
-        for (auto& cb : subscribers_[topic]) {
-            cb(data);
+    QVector<std::function<void(const QJsonDocument&)>> callbacks;
+    {
+        QWriteLocker lock(&rwLock_);
+        cache_[topic] = {data, QDateTime::currentDateTime(), ttl};
+        if (subscribers_.contains(topic)) {
+            for (const auto& sub : subscribers_[topic]) {
+                callbacks.push_back(sub.callback);
+            }
         }
+    }
+
+    for (auto& cb : callbacks) {
+        cb(data);
     }
 }
 
 void FinConDataHub::subscribe(const QString& topic, QObject* receiver, const std::function<void(const QJsonDocument&)>& callback) {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-    subscribers_[topic].append(callback);
+    QJsonDocument initialData;
+    bool hasData = false;
+    QVector<IFinConDataProvider*> providersToRefresh;
 
-    if (cache_.contains(topic)) {
-        FinConDataValue val = cache_[topic];
-        if (val.timestamp.addSecs(val.ttlSeconds) > QDateTime::currentDateTime()) {
-            callback(val.data);
+    {
+        QWriteLocker lock(&rwLock_);
+        subscribers_[topic].append({receiver, callback});
+
+        if (receiver) {
+            connect(receiver, &QObject::destroyed, this, [this, topic, receiver]() {
+                QWriteLocker lock(&rwLock_);
+                auto& subs = subscribers_[topic];
+                auto it = std::remove_if(subs.begin(), subs.end(), [receiver](const Subscriber& s) {
+                    return s.receiver == receiver;
+                });
+                subs.erase(it, subs.end());
+            });
+        }
+
+        if (cache_.contains(topic)) {
+            FinConDataValue val = cache_[topic];
+            if (val.timestamp.addSecs(val.ttlSeconds) > QDateTime::currentDateTime()) {
+                initialData = val.data;
+                hasData = true;
+            }
+        }
+
+        for (auto it = providers_.begin(); it != providers_.end(); ++it) {
+            QString pattern = it.key();
+            if (pattern.endsWith('*')) {
+                if (topic.startsWith(pattern.left(pattern.length() - 1))) {
+                    providersToRefresh.push_back(it.value());
+                }
+            } else if (pattern == topic) {
+                providersToRefresh.push_back(it.value());
+            }
         }
     }
 
-    for (auto it = providers_.begin(); it != providers_.end(); ++it) {
-        QString pattern = it.key();
-        if (pattern.endsWith('*')) {
-            if (topic.startsWith(pattern.left(pattern.length() - 1))) {
-                it.value()->refresh(topic);
-            }
-        } else if (pattern == topic) {
-            it.value()->refresh(topic);
+    if (hasData) callback(initialData);
+    for (auto* provider : providersToRefresh) {
+        // Simple rate limit: 1 request per second per producer
+        if (!lastRefresh_.contains(provider) || lastRefresh_[provider].addMSecs(1000) < QDateTime::currentDateTime()) {
+            lastRefresh_[provider] = QDateTime::currentDateTime();
+            provider->refresh(topic);
         }
     }
 }
 
 void FinConDataHub::registerProvider(const QString& topicPattern, IFinConDataProvider* provider) {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    QWriteLocker lock(&rwLock_);
     providers_[topicPattern] = provider;
 }
 
 void FinConDataHub::onTick() {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    QWriteLocker lock(&rwLock_);
     QDateTime now = QDateTime::currentDateTime();
     auto it = cache_.begin();
     while (it != cache_.end()) {

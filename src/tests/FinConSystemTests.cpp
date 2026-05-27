@@ -20,15 +20,15 @@ private slots:
     }
 
     void testWorkflowValidator() {
-        std::map<std::string, nodes::Node> graph;
+        std::map<std::string, FinConNodes::FinConNode> graph;
         graph["A"] = {"A", {"B"}};
         graph["B"] = {"B", {"C"}};
         graph["C"] = {"C", {"A"}}; // Cycle
 
-        QVERIFY(nodes::WorkflowValidator::hasCycle(graph) == true);
+        QVERIFY(FinConNodes::FinConWorkflowValidator::hasCycle(graph) == true);
 
         graph["C"] = {"C", {}}; // Break cycle
-        QVERIFY(nodes::WorkflowValidator::hasCycle(graph) == false);
+        QVERIFY(FinConNodes::FinConWorkflowValidator::hasCycle(graph) == false);
     }
 
     void testResult() {
