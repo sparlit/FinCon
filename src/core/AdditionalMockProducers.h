@@ -1,3 +1,5 @@
+#include <QJsonObject>
+#include "core/Logger.h"
 #pragma once
 #include "core/DataHub.h"
 #include <QTimer>

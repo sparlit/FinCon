@@ -18,10 +18,20 @@ struct FinConThemeTokens {
     int font_size_caption = 12;
 };
 
+enum class FinConThemeDensity { Compact, Default, Comfortable };
+enum class FinConThemeFlavor {
+    Default,
+    Trading,
+    Analytics,
+    Data,
+    System,
+    AI
+};
+
 class FinConThemeManager {
 public:
-    static QString generateStyleSheet();
-    static FinConThemeTokens tokens();
+    static QString generateStyleSheet(FinConThemeFlavor flavor = FinConThemeFlavor::Default, FinConThemeDensity density = FinConThemeDensity::Default);
+    static FinConThemeTokens tokens(FinConThemeFlavor flavor = FinConThemeFlavor::Default, FinConThemeDensity density = FinConThemeDensity::Default);
 };
 
 }

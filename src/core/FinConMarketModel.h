@@ -12,11 +12,11 @@ struct FinConMarketRow {
     double pctChange;
 };
 
-class FinConMarketModel : public QAbstractTableModel {
+class FinConFinConMarketModel : public QAbstractTableModel {
     Q_OBJECT
 public:
-    explicit FinConMarketModel(QObject* parent = nullptr);
-    virtual ~FinConMarketModel();
+    explicit FinConFinConMarketModel(QObject* parent = nullptr);
+    virtual ~FinConFinConMarketModel();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;

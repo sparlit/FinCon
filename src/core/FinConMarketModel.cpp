@@ -1,19 +1,20 @@
-#include "MarketModel.h"
+#include "FinConMarketModel.h"
+#include <QColor>
 
 namespace FinConCore {
 
-FinConMarketModel::FinConMarketModel(QObject* parent) : QAbstractTableModel(parent) {}
-FinConMarketModel::~FinConMarketModel() {}
+FinConFinConMarketModel::FinConFinConMarketModel(QObject* parent) : QAbstractTableModel(parent) {}
+FinConFinConMarketModel::~FinConFinConMarketModel() {}
 
-int FinConMarketModel::rowCount(const QModelIndex& parent) const {
+int FinConFinConMarketModel::rowCount(const QModelIndex& parent) const {
     return data_.size();
 }
 
-int FinConMarketModel::columnCount(const QModelIndex& parent) const {
+int FinConFinConMarketModel::columnCount(const QModelIndex& parent) const {
     return 4;
 }
 
-QVariant FinConMarketModel::data(const QModelIndex& index, int role) const {
+QVariant FinConFinConMarketModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= data_.size()) return QVariant();
 
     const auto& row = data_[index.row()];
@@ -24,11 +25,15 @@ QVariant FinConMarketModel::data(const QModelIndex& index, int role) const {
             case 2: return QString::number(row.change, 'f', 2);
             case 3: return QString::number(row.pctChange, 'f', 2) + "%";
         }
+    } else if (role == Qt::ForegroundRole) {
+        if (index.column() >= 2) {
+            return (row.change >= 0) ? QColor("#10b981") : QColor("#ef4444");
+        }
     }
     return QVariant();
 }
 
-QVariant FinConMarketModel::headerData(int section, Qt::Orientation orientation, int role) const {
+QVariant FinConFinConMarketModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
             case 0: return "Symbol";
@@ -40,7 +45,7 @@ QVariant FinConMarketModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-void FinConMarketModel::updateQuote(const QJsonObject& quote) {
+void FinConFinConMarketModel::updateQuote(const QJsonObject& quote) {
     QString symbol = quote["symbol"].toString();
     double price = quote["price"].toDouble();
 

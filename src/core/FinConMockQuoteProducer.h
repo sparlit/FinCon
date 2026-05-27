@@ -9,12 +9,12 @@
 
 namespace FinConCore {
 
-class FinConMockQuoteProducer : public QObject, public IFinConDataProvider {
+class FinConFinConMockQuoteProducer : public QObject, public IFinConDataProvider {
     Q_OBJECT
 public:
-    FinConMockQuoteProducer() {
+    FinConFinConMockQuoteProducer() {
         timer_ = new QTimer(this);
-        connect(timer_, &QTimer::timeout, this, &FinConMockQuoteProducer::publishQuotes);
+        connect(timer_, &QTimer::timeout, this, &FinConFinConMockQuoteProducer::publishQuotes);
         timer_->start(2000);
     }
 

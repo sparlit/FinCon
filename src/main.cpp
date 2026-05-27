@@ -9,7 +9,7 @@
 #include "core/CrashHandler.h"
 #include "core/Persistence.h"
 #include "core/Logger.h"
-#include "core/MockQuoteProducer.h"
+#include "core/FinConMockQuoteProducer.h"
 #include "core/AdditionalMockProducers.h"
 #include "services/AuthService.h"
 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    FinConCore::FinConMockQuoteProducer mockProducer;
+    FinConCore::FinConFinConMockQuoteProducer mockProducer;
     FinConCore::FinConMockNewsProducer newsProducer;
     FinConCore::FinConMockEconomicsProducer econProducer;
 

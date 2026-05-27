@@ -1,4 +1,5 @@
 #include "StatusBar.h"
+#include <QJsonObject>
 #include "core/DataHub.h"
 #include <QJsonDocument>
 #include <QJsonObject>

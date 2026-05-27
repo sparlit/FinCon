@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 #include <QShortcut>
 #include <QKeySequence>
+#include <QAction>
 
 namespace FinConUI {
 
@@ -23,8 +24,8 @@ void FinConMainWindow::setupUi() {
     setStatusBar(statusBar_);
 
     workspaceToolBar_ = new QToolBar("Workspace", this);
-    workspaceToolBar_->addAction("Pin AAPL");
-    workspaceToolBar_->addAction("Pin TSLA");
+    auto* appleAction = workspaceToolBar_->addAction("Pin AAPL");
+    auto* teslaAction = workspaceToolBar_->addAction("Pin TSLA");
     workspaceToolBar_->addSeparator();
     workspaceToolBar_->addAction("Default Layout");
     workspaceToolBar_->addAction("Compact Layout");
@@ -35,6 +36,9 @@ void FinConMainWindow::setupUi() {
 
     connect(sidebar_, &FinConSidebar::screenRequested, this, &FinConMainWindow::onScreenRequested);
     connect(commandBar_, &FinConCommandBar::actionTriggered, this, &FinConMainWindow::onScreenRequested);
+
+    connect(appleAction, &QAction::triggered, [this](){ onScreenRequested("Markets"); });
+    connect(teslaAction, &QAction::triggered, [this](){ onScreenRequested("Markets"); });
 
     new QShortcut(QKeySequence("Ctrl+K"), this, SLOT(showCommandBar()));
 }

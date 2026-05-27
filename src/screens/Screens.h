@@ -2,7 +2,7 @@
 #include "IScreen.h"
 #include <QTableWidget>
 #include <QTableView>
-#include "core/MarketModel.h"
+#include "core/FinConMarketModel.h"
 
 namespace FinConScreens {
 
@@ -18,7 +18,7 @@ public:
     FinConMarketsScreen(QWidget* parent = nullptr);
 private:
     QTableView* view_;
-    FinConCore::FinConMarketModel* model_;
+    FinConCore::FinConFinConMarketModel* model_;
 };
 
 class FinConAIChatScreen : public IFinConScreen {
@@ -37,6 +37,36 @@ class FinConPortfolioScreen : public IFinConScreen {
     Q_OBJECT
 public:
     FinConPortfolioScreen(QWidget* parent = nullptr);
+};
+
+class FinConNewsScreen : public IFinConScreen {
+    Q_OBJECT
+public:
+    FinConNewsScreen(QWidget* parent = nullptr);
+};
+
+class FinConTradingScreen : public IFinConScreen {
+    Q_OBJECT
+public:
+    FinConTradingScreen(QWidget* parent = nullptr);
+};
+
+class FinConExcelScreen : public IFinConScreen {
+    Q_OBJECT
+public:
+    FinConExcelScreen(QWidget* parent = nullptr);
+};
+
+class FinConCodeEditorScreen : public IFinConScreen {
+    Q_OBJECT
+public:
+    FinConCodeEditorScreen(QWidget* parent = nullptr);
+};
+
+class FinConAboutScreen : public IFinConScreen {
+    Q_OBJECT
+public:
+    FinConAboutScreen(QWidget* parent = nullptr);
 };
 
 }
