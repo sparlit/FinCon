@@ -87,4 +87,10 @@ public:
     FinConEconomicsScreen(QWidget* parent = nullptr);
 };
 
+class FinConGenericDataScreen : public FinConScreens::IFinConScreen {
+    Q_OBJECT
+public:
+    FinConGenericDataScreen(const QString& title, const QString& topic, QWidget* parent = nullptr);
+};
+
 }

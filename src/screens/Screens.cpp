@@ -135,8 +135,6 @@ FinConAboutScreen::FinConAboutScreen(QWidget* parent) : IFinConScreen(parent) {
     FinConLayout->addWidget(new QLabel("© 2026 FinCon Corporation. All rights reserved.", this));
 }
 
-}
-
 FinConCryptoTradingScreen::FinConCryptoTradingScreen(QWidget* parent) : IFinConScreen(parent) {
     auto FinConLayout = new QVBoxLayout(this);
     FinConLayout->addWidget(new QLabel("Crypto Trading Hub - Connect to Kraken/HyperLiquid", this));
@@ -159,4 +157,17 @@ FinConEconomicsScreen::FinConEconomicsScreen(QWidget* parent) : IFinConScreen(pa
     auto FinConTable = new QTableWidget(10, 3, this);
     FinConTable->setHorizontalHeaderLabels({"Indicator", "Value", "Release Date"});
     FinConLayout->addWidget(FinConTable);
+}
+
+FinConGenericDataScreen::FinConGenericDataScreen(const QString& title, const QString& topic, QWidget* parent) : IFinConScreen(parent) {
+    auto FinConLayout = new QVBoxLayout(this);
+    auto lbl = new QLabel(title, this);
+    lbl->setObjectName("heading");
+    FinConLayout->addWidget(lbl);
+    FinConLayout->addWidget(new QLabel("Streaming Data Topic: " + topic, this));
+    auto FinConTable = new QTableWidget(20, 2, this);
+    FinConTable->setHorizontalHeaderLabels({"Key", "Value"});
+    FinConLayout->addWidget(FinConTable);
+}
+
 }

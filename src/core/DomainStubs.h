@@ -20,6 +20,17 @@ class FinConIBKRBroker : public FinConGenericBroker {};
 class FinConZerodhaBroker : public FinConGenericBroker {};
 class FinConAlpacaBroker : public FinConGenericBroker {};
 
+class FinConBridgewaterAgent : public FinConPersonaAgent { public: FinConBridgewaterAgent() : FinConPersonaAgent("Bridgewater") {} };
+class FinConCitadelAgent : public FinConPersonaAgent { public: FinConCitadelAgent() : FinConPersonaAgent("Citadel") {} };
+class FinConRenaissanceAgent : public FinConPersonaAgent { public: FinConRenaissanceAgent() : FinConPersonaAgent("Renaissance") {} };
+class FinConTwoSigmaAgent : public FinConPersonaAgent { public: FinConTwoSigmaAgent() : FinConPersonaAgent("Two Sigma") {} };
+class FinConDEShawAgent : public FinConPersonaAgent { public: FinConDEShawAgent() : FinConPersonaAgent("D.E. Shaw") {} };
+class FinConElliottAgent : public FinConPersonaAgent { public: FinConElliottAgent() : FinConPersonaAgent("Elliott") {} };
+class FinConPershingSquareAgent : public FinConPersonaAgent { public: FinConPershingSquareAgent() : FinConPersonaAgent("Pershing Square") {} };
+class FinConAQRAgent : public FinConPersonaAgent { public: FinConAQRAgent() : FinConPersonaAgent("AQR") {} };
+
+class FinConMacroAgent : public FinConPersonaAgent { public: FinConMacroAgent() : FinConPersonaAgent("Macro Economic") {} };
+
 class FinConPersonaAgent : public IFinConAgent {
 public:
     FinConPersonaAgent(const QString& FinConStr_Name) : FinConStr_Name_(FinConStr_Name) {}
