@@ -4,16 +4,19 @@
 #include <map>
 #include <set>
 
-namespace nodes {
+#include <algorithm>
+#include <utility>
 
-struct Node {
+namespace FinConNodes {
+
+struct FinConNode {
     std::string id;
     std::vector<std::string> outputs; // List of target node IDs
 };
 
-class WorkflowValidator {
+class FinConWorkflowValidator {
 public:
-    static bool hasCycle(const std::map<std::string, Node>& nodes) {
+    static bool hasCycle(const std::map<std::string, FinConNode>& nodes) {
         std::set<std::string> visited;
         std::set<std::string> recStack;
 
@@ -26,7 +29,7 @@ public:
     }
 
 private:
-    static bool isCyclicUtil(const std::string& id, const std::map<std::string, Node>& nodes,
+    static bool isCyclicUtil(const std::string& id, const std::map<std::string, FinConNode>& nodes,
                              std::set<std::string>& visited, std::set<std::string>& recStack) {
         if (visited.find(id) == visited.end()) {
             visited.insert(id);

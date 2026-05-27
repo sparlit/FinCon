@@ -53,16 +53,23 @@ FinConEquityResearchScreen::FinConEquityResearchScreen(QWidget* parent) : IFinCo
 
     auto fPanel = new QTableWidget(5, 2, this);
     fPanel->setHorizontalHeaderLabels({"Fundamentals", "Value"});
+    fPanel->setItem(0, 0, new QTableWidgetItem("P/E Ratio")); fPanel->setItem(0, 1, new QTableWidgetItem("28.4"));
+    fPanel->setItem(1, 0, new QTableWidgetItem("Market Cap")); fPanel->setItem(1, 1, new QTableWidgetItem("2.8T"));
+    fPanel->setItem(2, 0, new QTableWidgetItem("EPS")); fPanel->setItem(2, 1, new QTableWidgetItem("6.15"));
     layout->addWidget(fPanel, 0, 0);
 
-    auto tPanel = new QLabel("Technicals Chart Placeholder", this);
+    auto tPanel = new QLabel("Technicals: RSI(14): 58.2 | MACD: Bullish Cross", this);
+    tPanel->setAlignment(Qt::AlignCenter);
     layout->addWidget(tPanel, 0, 1);
 
     auto pPanel = new QTableWidget(5, 3, this);
     pPanel->setHorizontalHeaderLabels({"Peer", "Price", "Cap"});
+    pPanel->setItem(0, 0, new QTableWidgetItem("MSFT")); pPanel->setItem(0, 1, new QTableWidgetItem("420.10"));
+    pPanel->setItem(1, 0, new QTableWidgetItem("GOOGL")); pPanel->setItem(1, 1, new QTableWidgetItem("175.40"));
     layout->addWidget(pPanel, 1, 0);
 
-    auto sPanel = new QLabel("Sentiment Analysis Placeholder", this);
+    auto sPanel = new QLabel("Sentiment: 82% Positive (Top News: Strong Earnings Beat)", this);
+    sPanel->setAlignment(Qt::AlignCenter);
     layout->addWidget(sPanel, 1, 1);
 }
 

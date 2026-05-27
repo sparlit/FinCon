@@ -29,7 +29,9 @@ void FinConDataHub::publish(const QString& topic, const QJsonDocument& data, int
         QWriteLocker lock(&rwLock_);
         cache_[topic] = {data, QDateTime::currentDateTime(), ttl};
         if (subscribers_.contains(topic)) {
-            callbacks = subscribers_[topic];
+            for (const auto& sub : subscribers_[topic]) {
+                callbacks.push_back(sub.callback);
+            }
         }
     }
 
@@ -45,7 +47,18 @@ void FinConDataHub::subscribe(const QString& topic, QObject* receiver, const std
 
     {
         QWriteLocker lock(&rwLock_);
-        subscribers_[topic].append(callback);
+        subscribers_[topic].append({receiver, callback});
+
+        if (receiver) {
+            connect(receiver, &QObject::destroyed, this, [this, topic, receiver]() {
+                QWriteLocker lock(&rwLock_);
+                auto& subs = subscribers_[topic];
+                auto it = std::remove_if(subs.begin(), subs.end(), [receiver](const Subscriber& s) {
+                    return s.receiver == receiver;
+                });
+                subs.erase(it, subs.end());
+            });
+        }
 
         if (cache_.contains(topic)) {
             FinConDataValue val = cache_[topic];

@@ -43,7 +43,11 @@ private:
     ~FinConDataHub();
     QReadWriteLock rwLock_;
     QMap<QString, FinConDataValue> cache_;
-    QMap<QString, QVector<std::function<void(const QJsonDocument&)>>> subscribers_;
+    struct Subscriber {
+        QObject* receiver;
+        std::function<void(const QJsonDocument&)> callback;
+    };
+    QMap<QString, QVector<Subscriber>> subscribers_;
     QMap<QString, IFinConDataProvider*> providers_;
     QMap<IFinConDataProvider*, QDateTime> lastRefresh_;
     QThread* workerThread_;
