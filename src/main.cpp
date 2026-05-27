@@ -10,6 +10,7 @@
 #include "core/Persistence.h"
 #include "core/Logger.h"
 #include "core/MockQuoteProducer.h"
+#include "core/AdditionalMockProducers.h"
 #include "services/AuthService.h"
 
 int main(int argc, char *argv[]) {
@@ -24,7 +25,12 @@ int main(int argc, char *argv[]) {
     }
 
     FinConCore::FinConMockQuoteProducer mockProducer;
+    FinConCore::FinConMockNewsProducer newsProducer;
+    FinConCore::FinConMockEconomicsProducer econProducer;
+
     FinConCore::FinConDataHub::instance().registerProvider("quote/*", &mockProducer);
+    FinConCore::FinConDataHub::instance().registerProvider("news/*", &newsProducer);
+    FinConCore::FinConDataHub::instance().registerProvider("economics/*", &econProducer);
 
     app.setStyleSheet(FinConCore::FinConThemeManager::generateStyleSheet());
 
