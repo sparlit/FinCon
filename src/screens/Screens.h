@@ -1,6 +1,8 @@
 #pragma once
 #include "IScreen.h"
 #include <QTableWidget>
+#include <QTableView>
+#include "core/MarketModel.h"
 
 namespace FinConScreens {
 
@@ -14,6 +16,9 @@ class FinConMarketsScreen : public IFinConScreen {
     Q_OBJECT
 public:
     FinConMarketsScreen(QWidget* parent = nullptr);
+private:
+    QTableView* view_;
+    FinConCore::FinConMarketModel* model_;
 };
 
 class FinConAIChatScreen : public IFinConScreen {

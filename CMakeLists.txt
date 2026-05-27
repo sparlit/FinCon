@@ -45,28 +45,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(qtads QXlsx)
 
 # Sources
-set(SOURCES
-    src/main.cpp
-    src/core/Logger.cpp
-    src/core/CrashHandler.cpp
-    src/core/ThemeManager.cpp
-    src/core/DataHub.cpp
-    src/core/Persistence.cpp
-    src/core/MockQuoteProducer.cpp
-    src/core/CredentialManager.cpp
-    src/services/AuthService.cpp
-    src/services/PythonRunner.cpp
-    src/ui/MainWindow.cpp
-    src/ui/CommandBar.cpp
-    src/ui/Sidebar.cpp
-    src/ui/StatusBar.cpp
-    src/ui/NavigationBar.cpp
-    src/screens/ScreenFactory.cpp
-    src/screens/Screens.cpp
-    src/screens/NodeEditorScreen.cpp
-    src/screens/QuantLibSuiteScreen.cpp
-    src/screens/IScreen.cpp
-)
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
+list(FILTER SOURCES EXCLUDE REGEX "src/tests/.*")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

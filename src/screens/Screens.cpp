@@ -1,5 +1,7 @@
 #include "Screens.h"
+#include "core/DataHub.h"
 #include <QVBoxLayout>
+#include <QJsonDocument>
 #include <QLabel>
 #include <QTextEdit>
 #include <QLineEdit>
@@ -20,9 +22,15 @@ FinConDashboardScreen::FinConDashboardScreen(QWidget* parent) : IFinConScreen(pa
 FinConMarketsScreen::FinConMarketsScreen(QWidget* parent) : IFinConScreen(parent) {
     auto layout = new QVBoxLayout(this);
     layout->addWidget(new QLabel("Global Markets Overview", this));
-    auto table = new QTableWidget(10, 4, this);
-    table->setHorizontalHeaderLabels({"Market", "Last", "Change", "% Change"});
-    layout->addWidget(table);
+
+    view_ = new QTableView(this);
+    model_ = new FinConCore::FinConMarketModel(this);
+    view_->setModel(model_);
+    layout->addWidget(view_);
+
+    FinConCore::FinConDataHub::instance().subscribe("quote/*", this, [this](const QJsonDocument& doc) {
+        model_->updateQuote(doc.object());
+    });
 }
 
 FinConAIChatScreen::FinConAIChatScreen(QWidget* parent) : IFinConScreen(parent) {

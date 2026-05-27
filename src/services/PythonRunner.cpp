@@ -9,7 +9,8 @@ FinConPythonRunner::FinConPythonRunner() {
 
 void FinConPythonRunner::runScript(const QString& script, const QStringList& args,
                              std::function<void(QString)> onOutput,
-                             std::function<void(int)> onFinished) {
+                             std::function<void(int)> onFinished,
+                             int timeoutMs) {
     queue_.enqueue({script, args, onOutput, onFinished});
     processQueue();
 }

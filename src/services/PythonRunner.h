@@ -23,7 +23,8 @@ public:
 
     void runScript(const QString& script, const QStringList& args,
                    std::function<void(QString)> onOutput,
-                   std::function<void(int)> onFinished);
+                   std::function<void(int)> onFinished,
+                   int timeoutMs = 30000);
 
 private slots:
     void processQueue();

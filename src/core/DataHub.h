@@ -4,9 +4,10 @@
 #include <QMap>
 #include <QDateTime>
 #include <QTimer>
-#include <mutex>
+#include <QReadWriteLock>
 #include <functional>
 #include <QJsonDocument>
+#include <QThread>
 
 namespace FinConCore {
 
@@ -39,10 +40,12 @@ private slots:
 
 private:
     FinConDataHub();
-    std::recursive_mutex mutex_;
+    ~FinConDataHub();
+    QReadWriteLock rwLock_;
     QMap<QString, FinConDataValue> cache_;
     QMap<QString, QVector<std::function<void(const QJsonDocument&)>>> subscribers_;
     QMap<QString, IFinConDataProvider*> providers_;
+    QThread* workerThread_;
     QTimer* tickTimer_;
 };
 
