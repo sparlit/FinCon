@@ -11,11 +11,11 @@ public:
     FinConQuantLibSuiteScreen(QWidget* parent = nullptr);
 
 private slots:
-    void onToolChanged(int index);
+    void onToolChanged(int FinConIdx_General);
 
 private:
-    QComboBox* toolSelector_;
-    QTableWidget* resultsTable_;
+    QComboBox* FinConQuant_ToolSelector;
+    QTableWidget* FinConQuant_ResultsTable;
 };
 
 }

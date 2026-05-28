@@ -32,9 +32,9 @@ private slots:
 
 private:
     FinConPythonRunner();
-    QQueue<FinConPythonJob> queue_;
-    QProcess* currentProcesses_[3];
-    int activeProcesses_ = 0;
+    QQueue<FinConPythonJob> FinConPython_Queue;
+    QProcess* FinConPython_Processes[3];
+    int FinConPython_ActiveCount = 0;
 };
 
 }

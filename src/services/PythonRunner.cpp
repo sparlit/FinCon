@@ -5,29 +5,29 @@
 namespace FinConServices {
 
 FinConPythonRunner::FinConPythonRunner() {
-    for (int i = 0; i < 3; ++i) currentProcesses_[i] = nullptr;
+    for (int i = 0; i < 3; ++i) FinConPython_Processes[i] = nullptr;
 }
 
 void FinConPythonRunner::runScript(const QString& script, const QStringList& args,
                              std::function<void(QString)> onOutput,
                              std::function<void(int)> onFinished,
                              int timeoutMs) {
-    queue_.enqueue({script, args, onOutput, onFinished, timeoutMs});
+    FinConPython_Queue.enqueue({script, args, onOutput, onFinished, timeoutMs});
     processQueue();
 }
 
 void FinConPythonRunner::processQueue() {
-    if (queue_.isEmpty() || activeProcesses_ >= 3) return;
+    if (FinConPython_Queue.isEmpty() || FinConPython_ActiveCount >= 3) return;
 
     for (int i = 0; i < 3; ++i) {
-        if (currentProcesses_[i] == nullptr) {
-            FinConPythonJob job = queue_.dequeue();
+        if (FinConPython_Processes[i] == nullptr) {
+            FinConPythonJob job = FinConPython_Queue.dequeue();
             QProcess* proc = new QProcess(this);
-            currentProcesses_[i] = proc;
-            activeProcesses_++;
+            FinConPython_Processes[i] = proc;
+            FinConPython_ActiveCount++;
 
             connect(proc, &QProcess::readyReadStandardOutput, this, [this, i, job]() {
-                QString out = currentProcesses_[i]->readAllStandardOutput();
+                QString out = FinConPython_Processes[i]->readAllStandardOutput();
                 if (job.onOutput) job.onOutput(out);
             });
 
@@ -40,9 +40,9 @@ void FinConPythonRunner::processQueue() {
 
             connect(proc, &QProcess::finished, this, [this, i, job](int exitCode) {
                 if (job.onFinished) job.onFinished(exitCode);
-                currentProcesses_[i]->deleteLater();
-                currentProcesses_[i] = nullptr;
-                activeProcesses_--;
+                FinConPython_Processes[i]->deleteLater();
+                FinConPython_Processes[i] = nullptr;
+                FinConPython_ActiveCount--;
                 processQueue();
             });
 

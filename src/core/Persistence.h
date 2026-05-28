@@ -14,11 +14,11 @@ public:
     bool init();
     void runMigrations();
 
-    QSqlDatabase db() { return db_; }
+    QSqlDatabase db() { return FinConPersistence_Db; }
 
 private:
     FinConPersistence();
-    QSqlDatabase db_;
+    QSqlDatabase FinConPersistence_Db;
 };
 
 }

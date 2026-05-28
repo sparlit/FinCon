@@ -4,55 +4,55 @@
 namespace FinConCore {
 
 FinConDataHub::FinConDataHub() {
-    workerThread_ = new QThread(this);
-    workerThread_->setObjectName("FinConDataHubWorker");
+    FinConDataHub_WorkerThread = new QThread(this);
+    FinConDataHub_WorkerThread->setObjectName("FinConDataHubWorker");
 
-    tickTimer_ = new QTimer(nullptr);
-    tickTimer_->setInterval(1000);
-    tickTimer_->moveToThread(workerThread_);
+    FinConDataHub_TickTimer = new QTimer(nullptr);
+    FinConDataHub_TickTimer->setInterval(1000);
+    FinConDataHub_TickTimer->moveToThread(FinConDataHub_WorkerThread);
 
-    connect(tickTimer_, &QTimer::timeout, this, &FinConDataHub::onTick, Qt::DirectConnection);
-    connect(workerThread_, &QThread::started, tickTimer_, [this](){ tickTimer_->start(); });
-    connect(workerThread_, &QThread::finished, tickTimer_, &QTimer::deleteLater);
+    connect(FinConDataHub_TickTimer, &QTimer::timeout, this, &FinConDataHub::onTick, Qt::DirectConnection);
+    connect(FinConDataHub_WorkerThread, &QThread::started, FinConDataHub_TickTimer, [this](){ FinConDataHub_TickTimer->start(); });
+    connect(FinConDataHub_WorkerThread, &QThread::finished, FinConDataHub_TickTimer, &QTimer::deleteLater);
 
-    workerThread_->start();
+    FinConDataHub_WorkerThread->start();
 }
 
 FinConDataHub::~FinConDataHub() {
-    workerThread_->quit();
-    workerThread_->wait();
+    FinConDataHub_WorkerThread->quit();
+    FinConDataHub_WorkerThread->wait();
 }
 
 void FinConDataHub::publish(const QString& topic, const QJsonDocument& data, int ttl) {
-    QVector<std::function<void(const QJsonDocument&)>> callbacks;
+    QVector<std::function<void(const QJsonDocument&)>> FinConList_Callbacks;
     {
-        QWriteLocker lock(&rwLock_);
-        cache_[topic] = {data, QDateTime::currentDateTime(), ttl};
-        if (subscribers_.contains(topic)) {
-            for (const auto& sub : subscribers_[topic]) {
-                callbacks.push_back(sub.callback);
+        QWriteLocker lock(&FinConDataHub_RWLock);
+        FinConDataHub_Cache[topic] = {data, QDateTime::currentDateTime(), ttl};
+        if (FinConDataHub_Subscribers.contains(topic)) {
+            for (const auto& sub : FinConDataHub_Subscribers[topic]) {
+                FinConList_Callbacks.push_back(sub.callback);
             }
         }
     }
 
-    for (auto& cb : callbacks) {
+    for (auto& cb : FinConList_Callbacks) {
         cb(data);
     }
 }
 
 void FinConDataHub::subscribe(const QString& topic, QObject* receiver, const std::function<void(const QJsonDocument&)>& callback) {
-    QJsonDocument initialData;
-    bool hasData = false;
-    QVector<IFinConDataProvider*> providersToRefresh;
+    QJsonDocument FinConData_Initial;
+    bool FinConFlag_HasData = false;
+    QVector<IFinConDataProvider*> FinConList_ProvidersToRefresh;
 
     {
-        QWriteLocker lock(&rwLock_);
-        subscribers_[topic].append({receiver, callback});
+        QWriteLocker lock(&FinConDataHub_RWLock);
+        FinConDataHub_Subscribers[topic].append({receiver, callback});
 
         if (receiver) {
             connect(receiver, &QObject::destroyed, this, [this, topic, receiver]() {
-                QWriteLocker lock(&rwLock_);
-                auto& subs = subscribers_[topic];
+                QWriteLocker lock(&FinConDataHub_RWLock);
+                auto& subs = FinConDataHub_Subscribers[topic];
                 auto it = std::remove_if(subs.begin(), subs.end(), [receiver](const Subscriber& s) {
                     return s.receiver == receiver;
                 });
@@ -60,49 +60,49 @@ void FinConDataHub::subscribe(const QString& topic, QObject* receiver, const std
             });
         }
 
-        if (cache_.contains(topic)) {
-            FinConDataValue val = cache_[topic];
-            if (val.timestamp.addSecs(val.ttlSeconds) > QDateTime::currentDateTime()) {
-                initialData = val.data;
-                hasData = true;
+        if (FinConDataHub_Cache.contains(topic)) {
+            FinConDataValue FinConVal_Entry = FinConDataHub_Cache[topic];
+            if (FinConVal_Entry.FinConStr_Timestamp.addSecs(FinConVal_Entry.ttlSeconds) > QDateTime::currentDateTime()) {
+                FinConData_Initial = FinConVal_Entry.data;
+                FinConFlag_HasData = true;
             }
         }
 
-        for (auto it = providers_.begin(); it != providers_.end(); ++it) {
-            QString pattern = it.key();
-            if (pattern.endsWith('*')) {
-                if (topic.startsWith(pattern.left(pattern.length() - 1))) {
-                    providersToRefresh.push_back(it.value());
+        for (auto it = FinConDataHub_Providers.begin(); it != FinConDataHub_Providers.end(); ++it) {
+            QString FinConStr_Pattern = it.key();
+            if (FinConStr_Pattern.endsWith('*')) {
+                if (topic.startsWith(FinConStr_Pattern.left(FinConStr_Pattern.length() - 1))) {
+                    FinConList_ProvidersToRefresh.push_back(it.value());
                 }
-            } else if (pattern == topic) {
-                providersToRefresh.push_back(it.value());
+            } else if (FinConStr_Pattern == topic) {
+                FinConList_ProvidersToRefresh.push_back(it.value());
             }
         }
     }
 
-    if (hasData) callback(initialData);
-    for (auto* provider : providersToRefresh) {
+    if (FinConFlag_HasData) callback(FinConData_Initial);
+    for (auto* provider : FinConList_ProvidersToRefresh) {
         // Simple rate limit: 1 request per second per producer
-        if (!lastRefresh_.contains(provider) || lastRefresh_[provider].addMSecs(1000) < QDateTime::currentDateTime()) {
-            lastRefresh_[provider] = QDateTime::currentDateTime();
+        if (!FinConDataHub_LastRefresh.contains(provider) || FinConDataHub_LastRefresh[provider].addMSecs(1000) < QDateTime::currentDateTime()) {
+            FinConDataHub_LastRefresh[provider] = QDateTime::currentDateTime();
             provider->refresh(topic);
         }
     }
 }
 
 void FinConDataHub::registerProvider(const QString& topicPattern, IFinConDataProvider* provider) {
-    QWriteLocker lock(&rwLock_);
-    providers_[topicPattern] = provider;
+    QWriteLocker lock(&FinConDataHub_RWLock);
+    FinConDataHub_Providers[topicPattern] = provider;
 }
 
 void FinConDataHub::onTick() {
-    QWriteLocker lock(&rwLock_);
+    QWriteLocker lock(&FinConDataHub_RWLock);
     QDateTime now = QDateTime::currentDateTime();
-    auto it = cache_.begin();
-    while (it != cache_.end()) {
-        if (it.value().timestamp.addSecs(it.value().ttlSeconds) < now) {
+    auto it = FinConDataHub_Cache.begin();
+    while (it != FinConDataHub_Cache.end()) {
+        if (it.value().FinConStr_Timestamp.addSecs(it.value().ttlSeconds) < now) {
             FINCON_LOG_DEBUG("DataHub", "Expiring topic: " + it.key().toStdString());
-            it = cache_.erase(it);
+            it = FinConDataHub_Cache.erase(it);
         } else {
             ++it;
         }

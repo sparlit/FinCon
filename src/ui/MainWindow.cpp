@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 #include <QShortcut>
 #include <QKeySequence>
+#include <QAction>
 
 namespace FinConUI {
 
@@ -11,30 +12,33 @@ FinConMainWindow::FinConMainWindow(QWidget* parent) : QMainWindow(parent) {
 }
 
 void FinConMainWindow::setupUi() {
-    dockManager_ = new ads::CDockManager(this);
+    FinConMain_DockManager = new ads::CDockManager(this);
 
-    navBar_ = new FinConNavigationBar(this);
-    setMenuWidget(navBar_);
+    FinConMain_NavBar = new FinConNavigationBar(this);
+    setMenuWidget(FinConMain_NavBar);
 
-    sidebar_ = new FinConSidebar(this);
-    addDockWidget(Qt::LeftDockWidgetArea, sidebar_);
+    FinConMain_Sidebar = new FinConSidebar(this);
+    addDockWidget(Qt::LeftDockWidgetArea, FinConMain_Sidebar);
 
-    statusBar_ = new FinConStatusBar(this);
-    setStatusBar(statusBar_);
+    FinConMain_StatusBar = new FinConStatusBar(this);
+    setStatusBar(FinConMain_StatusBar);
 
-    workspaceToolBar_ = new QToolBar("Workspace", this);
-    workspaceToolBar_->addAction("Pin AAPL");
-    workspaceToolBar_->addAction("Pin TSLA");
-    workspaceToolBar_->addSeparator();
-    workspaceToolBar_->addAction("Default Layout");
-    workspaceToolBar_->addAction("Compact Layout");
-    addToolBar(Qt::TopToolBarArea, workspaceToolBar_);
+    FinConMain_WorkspaceToolBar = new QToolBar("Workspace", this);
+    auto* appleAction = FinConMain_WorkspaceToolBar->addAction("Pin AAPL");
+    auto* teslaAction = FinConMain_WorkspaceToolBar->addAction("Pin TSLA");
+    FinConMain_WorkspaceToolBar->addSeparator();
+    FinConMain_WorkspaceToolBar->addAction("Default Layout");
+    FinConMain_WorkspaceToolBar->addAction("Compact Layout");
+    addToolBar(Qt::TopToolBarArea, FinConMain_WorkspaceToolBar);
 
-    commandBar_ = new FinConCommandBar(this);
-    commandBar_->hide();
+    FinConMain_CommandBar = new FinConCommandBar(this);
+    FinConMain_CommandBar->hide();
 
-    connect(sidebar_, &FinConSidebar::screenRequested, this, &FinConMainWindow::onScreenRequested);
-    connect(commandBar_, &FinConCommandBar::actionTriggered, this, &FinConMainWindow::onScreenRequested);
+    connect(FinConMain_Sidebar, &FinConSidebar::screenRequested, this, &FinConMainWindow::onScreenRequested);
+    connect(FinConMain_CommandBar, &FinConCommandBar::actionTriggered, this, &FinConMainWindow::onScreenRequested);
+
+    connect(appleAction, &QAction::triggered, [this](){ onScreenRequested("Markets"); });
+    connect(teslaAction, &QAction::triggered, [this](){ onScreenRequested("Markets"); });
 
     new QShortcut(QKeySequence("Ctrl+K"), this, SLOT(showCommandBar()));
 }
@@ -44,13 +48,13 @@ void FinConMainWindow::onScreenRequested(const QString& screenName) {
     if (screen) {
         ads::CDockWidget* dockWidget = new ads::CDockWidget(screenName);
         dockWidget->setWidget(screen);
-        dockManager_->addDockWidget(ads::CenterDockWidgetArea, dockWidget);
+        FinConMain_DockManager->addDockWidget(ads::CenterDockWidgetArea, dockWidget);
     }
 }
 
 void FinConMainWindow::showCommandBar() {
-    commandBar_->show();
-    commandBar_->setFocus();
+    FinConMain_CommandBar->show();
+    FinConMain_CommandBar->setFocus();
 }
 
 }

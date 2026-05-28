@@ -21,9 +21,9 @@ private slots:
     void onItemActivated(QListWidgetItem* item);
 
 private:
-    QLineEdit* input_;
-    QListWidget* results_;
-    QStringList allActions_;
+    QLineEdit* FinConCommand_Input;
+    QListWidget* FinConCommand_Results;
+    QStringList FinConCommand_Actions;
 };
 
 }

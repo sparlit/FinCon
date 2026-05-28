@@ -3,7 +3,7 @@
 namespace FinConUI {
 
 FinConSidebar::FinConSidebar(QWidget* parent) : QDockWidget("Navigation", parent) {
-    list_ = new QListWidget(this);
+    FinConSidebar_List = new QListWidget(this);
     QStringList screens = {
         "Dashboard", "Markets", "Watchlist", "News", "Crypto Trading",
         "Equity Trading", "Algo Trading", "Backtesting", "Trade Visualization",
@@ -15,10 +15,10 @@ FinConSidebar::FinConSidebar(QWidget* parent) : QDockWidget("Navigation", parent
         "Report Builder", "Data Sources", "Data Mapping", "File Manager",
         "Notes", "Forum", "Profile", "Settings", "Support", "Docs", "About"
     };
-    list_->addItems(screens);
-    setWidget(list_);
+    FinConSidebar_List->addItems(screens);
+    setWidget(FinConSidebar_List);
 
-    connect(list_, &QListWidget::itemClicked, this, [this](QListWidgetItem* item) {
+    connect(FinConSidebar_List, &QListWidget::itemClicked, this, [this](QListWidgetItem* item) {
         emit screenRequested(item->text());
     });
 }

@@ -16,7 +16,7 @@ public:
     }
 
     void get(const QUrl& url, std::function<void(const FinConCore::FinConResult<QByteArray>&)> callback) {
-        auto* reply = manager_->get(QNetworkRequest(url));
+        auto* reply = FinConNet_Manager->get(QNetworkRequest(url));
         connect(reply, &QNetworkReply::finished, this, [reply, callback]() {
             if (reply->error() == QNetworkReply::NoError) {
                 callback(FinConCore::FinConResult<QByteArray>(reply->readAll()));
@@ -29,9 +29,9 @@ public:
 
 private:
     FinConHttpClient() {
-        manager_ = new QNetworkAccessManager(this);
+        FinConNet_Manager = new QNetworkAccessManager(this);
     }
-    QNetworkAccessManager* manager_;
+    QNetworkAccessManager* FinConNet_Manager;
 };
 
 }

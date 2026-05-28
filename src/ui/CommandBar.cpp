@@ -1,24 +1,27 @@
 #include "CommandBar.h"
 #include <QVBoxLayout>
 #include <QKeyEvent>
+#include <QVector>
+#include <algorithm>
+#include <utility>
 
 namespace FinConUI {
 
 FinConCommandBar::FinConCommandBar(QWidget* parent) : QWidget(parent, Qt::FramelessWindowHint | Qt::Popup) {
-    auto layout = new QVBoxLayout(this);
-    input_ = new QLineEdit(this);
-    input_->setPlaceholderText("Search screens or actions (Ctrl+K)...");
+    auto FinConLayout = new QVBoxLayout(this);
+    FinConCommand_Input = new QLineEdit(this);
+    FinConCommand_Input->setPlaceholderText("Search screens or actions (Ctrl+K)...");
 
-    results_ = new QListWidget(this);
+    FinConCommand_Results = new QListWidget(this);
 
-    layout->addWidget(input_);
-    layout->addWidget(results_);
+    FinConLayout->addWidget(FinConCommand_Input);
+    FinConLayout->addWidget(FinConCommand_Results);
 
     setFixedSize(600, 400);
 
-    input_->installEventFilter(this);
+    FinConCommand_Input->installEventFilter(this);
 
-    allActions_ = {
+    FinConCommand_Actions = {
         "Dashboard", "Markets", "Watchlist", "News", "Crypto Trading",
         "Equity Trading", "Algo Trading", "Backtesting", "Trade Visualization",
         "Portfolio", "Equity Research", "Derivatives", "QuantLib Suite",
@@ -30,17 +33,17 @@ FinConCommandBar::FinConCommandBar(QWidget* parent) : QWidget(parent, Qt::Framel
         "Notes", "Forum", "Profile", "Settings", "Support", "Docs", "About", "Logout"
     };
 
-    connect(input_, &QLineEdit::textChanged, this, &FinConCommandBar::onTextChanged);
-    connect(results_, &QListWidget::itemActivated, this, &FinConCommandBar::onItemActivated);
-    connect(results_, &QListWidget::itemClicked, this, &FinConCommandBar::onItemActivated);
+    connect(FinConCommand_Input, &QLineEdit::textChanged, this, &FinConCommandBar::onTextChanged);
+    connect(FinConCommand_Results, &QListWidget::itemActivated, this, &FinConCommandBar::onItemActivated);
+    connect(FinConCommand_Results, &QListWidget::itemClicked, this, &FinConCommandBar::onItemActivated);
 }
 
 void FinConCommandBar::onTextChanged(const QString& text) {
-    results_->clear();
+    FinConCommand_Results->clear();
     if (text.isEmpty()) return;
 
     QVector<std::pair<int, QString>> matches;
-    for (const auto& action : allActions_) {
+    for (const auto& action : FinConCommand_Actions) {
         int score = 0;
         if (action.startsWith(text, Qt::CaseInsensitive)) score += 100;
         else if (action.contains(text, Qt::CaseInsensitive)) score += 50;
@@ -55,7 +58,7 @@ void FinConCommandBar::onTextChanged(const QString& text) {
     });
 
     for (const auto& match : matches) {
-        results_->addItem(match.second);
+        FinConCommand_Results->addItem(match.second);
     }
 }
 

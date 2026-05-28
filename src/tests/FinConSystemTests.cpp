@@ -13,7 +13,7 @@ private slots:
         });
 
         QJsonObject obj;
-        obj["price"] = 100;
+        obj["FinConVal_Price"] = 100;
         FinConCore::FinConDataHub::instance().publish("test/topic", QJsonDocument(obj));
 
         QVERIFY(received);

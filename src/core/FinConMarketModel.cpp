@@ -1,4 +1,5 @@
-#include "MarketModel.h"
+#include "FinConMarketModel.h"
+#include <QColor>
 
 namespace FinConCore {
 
@@ -13,16 +14,20 @@ int FinConMarketModel::columnCount(const QModelIndex& parent) const {
     return 4;
 }
 
-QVariant FinConMarketModel::data(const QModelIndex& index, int role) const {
-    if (!index.isValid() || index.row() >= data_.size()) return QVariant();
+QVariant FinConMarketModel::data(const QModelIndex& FinConIdx_General, int role) const {
+    if (!FinConIdx_General.isValid() || FinConIdx_General.row() >= data_.size()) return QVariant();
 
-    const auto& row = data_[index.row()];
+    const auto& row = data_[FinConIdx_General.row()];
     if (role == Qt::DisplayRole) {
-        switch (index.column()) {
-            case 0: return row.symbol;
-            case 1: return QString::number(row.price, 'f', 2);
+        switch (FinConIdx_General.column()) {
+            case 0: return row.FinConStr_Symbol;
+            case 1: return QString::number(row.FinConVal_Price, 'f', 2);
             case 2: return QString::number(row.change, 'f', 2);
             case 3: return QString::number(row.pctChange, 'f', 2) + "%";
+        }
+    } else if (role == Qt::ForegroundRole) {
+        if (FinConIdx_General.column() >= 2) {
+            return (row.change >= 0) ? QColor("#10b981") : QColor("#ef4444");
         }
     }
     return QVariant();
@@ -41,19 +46,19 @@ QVariant FinConMarketModel::headerData(int section, Qt::Orientation orientation,
 }
 
 void FinConMarketModel::updateQuote(const QJsonObject& quote) {
-    QString symbol = quote["symbol"].toString();
-    double price = quote["price"].toDouble();
+    QString FinConStr_Symbol = quote["FinConStr_Symbol"].toString();
+    double FinConVal_Price = quote["FinConVal_Price"].toDouble();
 
     for (int i = 0; i < data_.size(); ++i) {
-        if (data_[i].symbol == symbol) {
-            data_[i].price = price;
+        if (data_[i].FinConStr_Symbol == FinConStr_Symbol) {
+            data_[i].FinConVal_Price = FinConVal_Price;
             emit dataChanged(index(i, 0), index(i, 3));
             return;
         }
     }
 
     beginInsertRows(QModelIndex(), data_.size(), data_.size());
-    data_.push_back({symbol, price, 0.0, 0.0});
+    data_.push_back({FinConStr_Symbol, FinConVal_Price, 0.0, 0.0});
     endInsertRows();
 }
 
